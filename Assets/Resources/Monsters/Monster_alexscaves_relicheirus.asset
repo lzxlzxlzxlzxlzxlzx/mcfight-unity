@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_alexscaves_relicheirus
+  m_EditorClassIdentifier: 
+  monsterId: alexscaves_relicheirus
+  displayName: "\u9057\u8FF9\u6050\u624B\u9F99"
+  price: 60
+  description: 
+  hp: 120
+  attack: 12
+  armor: 0
+  armorToughness: 0
+  moveSpeed: 58
+  attackRange: 42
+  attackInterval: 0.85
+  radius: 18
+  moveType: 0
+  attackType: 0
+  tags: []
+  onHitEffects: 
+  abilityComponentType: 
+  idleSprite: {fileID: 21300000, guid: 719648c5215788e4ca99fb89393ba5e7, type: 3}
+  attackSprite: {fileID: 21300000, guid: fad773e6d607ca24fa6d6e3b3e78728d, type: 3}
+  deadSprite: {fileID: 0}

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_alexscaves_tremorzilla
+  m_EditorClassIdentifier: 
+  monsterId: alexscaves_tremorzilla
+  displayName: "\u64BC\u5730\u65AF\u62C9"
+  price: 1000
+  description: 
+  hp: 500
+  attack: 30
+  armor: 10
+  armorToughness: 0
+  moveSpeed: 48
+  attackRange: 58
+  attackInterval: 1
+  radius: 56
+  moveType: 0
+  attackType: 0
+  tags:
+  - boss
+  - aoe_melee
+  - giant
+  - beam_skill
+  onHitEffects: 00000000
+  abilityComponentType: TremorzillaAbility
+  idleSprite: {fileID: 21300000, guid: e9bce32d5aba58f47b7f7b82b1eb4233, type: 3}
+  attackSprite: {fileID: 21300000, guid: 6949b350fcd8c3a43a7f13e579838f73, type: 3}
+  deadSprite: {fileID: 0}

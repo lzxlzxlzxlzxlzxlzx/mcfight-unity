@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_dread_beast
+  m_EditorClassIdentifier: 
+  monsterId: dread_beast
+  displayName: "\u609A\u6016\u5C38\u517D"
+  price: 0
+  description: 
+  hp: 30
+  attack: 4
+  armor: 1
+  armorToughness: 0
+  moveSpeed: 72
+  attackRange: 42
+  attackInterval: 1
+  radius: 14
+  moveType: 0
+  attackType: 0
+  tags: []
+  onHitEffects: 
+  abilityComponentType: 
+  idleSprite: {fileID: 21300000, guid: 9e1ae8029cf87a442913e6faff1ab248, type: 3}
+  attackSprite: {fileID: 0}
+  deadSprite: {fileID: 0}

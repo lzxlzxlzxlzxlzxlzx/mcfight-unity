@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_iceandfire_cyclops
+  m_EditorClassIdentifier: 
+  monsterId: iceandfire_cyclops
+  displayName: "\u72EC\u773C\u5DE8\u4EBA"
+  price: 150
+  description: 
+  hp: 150
+  attack: 17
+  armor: 20
+  armorToughness: 0
+  moveSpeed: 48
+  attackRange: 42
+  attackInterval: 2
+  radius: 22
+  moveType: 0
+  attackType: 0
+  tags:
+  - cyclops_special
+  onHitEffects: 
+  abilityComponentType: CyclopsAbility
+  idleSprite: {fileID: 21300000, guid: a12ae47f870026c46b676e585601f9d7, type: 3}
+  attackSprite: {fileID: 21300000, guid: 96eb2935857a15e4da54651b6dfb215b, type: 3}
+  deadSprite: {fileID: 0}

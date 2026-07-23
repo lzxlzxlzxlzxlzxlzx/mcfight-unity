@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_blaze
+  m_EditorClassIdentifier: 
+  monsterId: blaze
+  displayName: "\u70C8\u7130\u4EBA"
+  price: 10
+  description: 
+  hp: 20
+  attack: 5
+  armor: 0
+  armorToughness: 0
+  moveSpeed: 20
+  attackRange: 160
+  attackInterval: 5
+  radius: 16
+  moveType: 1
+  attackType: 1
+  tags:
+  - fly
+  onHitEffects: 01000000
+  abilityComponentType: BlazeAbility
+  idleSprite: {fileID: 21300000, guid: f75f2a7c0219ab844b54fdbba66cb5e6, type: 3}
+  attackSprite: {fileID: 21300000, guid: b328cc53e0486744894f52184c37f4fe, type: 3}
+  deadSprite: {fileID: 0}

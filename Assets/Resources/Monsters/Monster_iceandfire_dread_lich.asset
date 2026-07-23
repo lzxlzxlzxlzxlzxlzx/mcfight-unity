@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_iceandfire_dread_lich
+  m_EditorClassIdentifier: 
+  monsterId: iceandfire_dread_lich
+  displayName: "\u609A\u6016\u5C38\u5DEB"
+  price: 100
+  description: 
+  hp: 50
+  attack: 6
+  armor: 2
+  armorToughness: 0
+  moveSpeed: 40
+  attackRange: 200
+  attackInterval: 1
+  radius: 16
+  moveType: 0
+  attackType: 1
+  tags:
+  - dread_lich_special
+  onHitEffects: 
+  abilityComponentType: DreadLichAbility
+  idleSprite: {fileID: 21300000, guid: 97653760d28ba6444b666970c22beaa5, type: 3}
+  attackSprite: {fileID: 21300000, guid: 8d5f01f0c6a178f48923dcde3ef4e042, type: 3}
+  deadSprite: {fileID: 0}

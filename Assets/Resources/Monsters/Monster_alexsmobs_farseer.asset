@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_alexsmobs_farseer
+  m_EditorClassIdentifier: 
+  monsterId: alexsmobs_farseer
+  displayName: "\u77BB\u8FDC\u8005"
+  price: 120
+  description: 
+  hp: 70
+  attack: 6
+  armor: 6
+  armorToughness: 0
+  moveSpeed: 50
+  attackRange: 200
+  attackInterval: 1.5
+  radius: 16
+  moveType: 1
+  attackType: 1
+  tags:
+  - farseer_special
+  - fly
+  onHitEffects: 
+  abilityComponentType: FarseerAbility
+  idleSprite: {fileID: 21300000, guid: fcd3ea80775689e49bcc69eaa3c0a962, type: 3}
+  attackSprite: {fileID: 21300000, guid: eb6825e776f78c240b53cdc42bdf90b4, type: 3}
+  deadSprite: {fileID: 0}

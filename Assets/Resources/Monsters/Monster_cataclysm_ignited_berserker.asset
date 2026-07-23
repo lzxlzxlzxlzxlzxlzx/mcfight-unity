@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_cataclysm_ignited_berserker
+  m_EditorClassIdentifier: 
+  monsterId: cataclysm_ignited_berserker
+  displayName: "\u70BD\u71C3\u72C2\u9B42"
+  price: 60
+  description: 
+  hp: 65
+  attack: 14
+  armor: 8
+  armorToughness: 0
+  moveSpeed: 40
+  attackRange: 42
+  attackInterval: 3
+  radius: 18
+  moveType: 0
+  attackType: 0
+  tags:
+  - aoe_melee
+  onHitEffects: 01000000
+  abilityComponentType: BerserkerAbility
+  idleSprite: {fileID: 21300000, guid: aaaff27f90a93114e9995b7c0a0dba2d, type: 3}
+  attackSprite: {fileID: 21300000, guid: 3ed4c79ee0cc49541b537a9cb23ab48a, type: 3}
+  deadSprite: {fileID: 0}

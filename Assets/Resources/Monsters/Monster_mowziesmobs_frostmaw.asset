@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_mowziesmobs_frostmaw
+  m_EditorClassIdentifier: 
+  monsterId: mowziesmobs_frostmaw
+  displayName: "\u971C\u51BB\u5DE8\u517D"
+  price: 150
+  description: 
+  hp: 250
+  attack: 8
+  armor: 6
+  armorToughness: 0
+  moveSpeed: 44
+  attackRange: 220
+  attackInterval: 3
+  radius: 28
+  moveType: 0
+  attackType: 0
+  tags:
+  - boss
+  - frostmaw_special
+  onHitEffects: 03000000
+  abilityComponentType: FrostmawAbility
+  idleSprite: {fileID: 21300000, guid: 799d5811ba335a14eb1a0cdb5f720356, type: 3}
+  attackSprite: {fileID: 21300000, guid: 0b8ae4e741e3e6a4f92204e9ec835355, type: 3}
+  deadSprite: {fileID: 0}

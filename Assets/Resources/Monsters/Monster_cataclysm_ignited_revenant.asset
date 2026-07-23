@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_cataclysm_ignited_revenant
+  m_EditorClassIdentifier: 
+  monsterId: cataclysm_ignited_revenant
+  displayName: "\u70BD\u71C3\u9057\u9B42"
+  price: 180
+  description: 
+  hp: 80
+  attack: 6
+  armor: 12
+  armorToughness: 0
+  moveSpeed: 42
+  attackRange: 160
+  attackInterval: 1
+  radius: 18
+  moveType: 0
+  attackType: 0
+  tags:
+  - fire_immune
+  - revenant_special
+  onHitEffects: 01000000
+  abilityComponentType: RevenantAbility
+  idleSprite: {fileID: 21300000, guid: ea8684a966577c943862730892f79cd5, type: 3}
+  attackSprite: {fileID: 21300000, guid: 077feedee59897547bb9c22ec7e5dc45, type: 3}
+  deadSprite: {fileID: 0}

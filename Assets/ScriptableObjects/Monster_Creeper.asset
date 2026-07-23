@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_Creeper
+  m_EditorClassIdentifier: 
+  monsterId: creeper
+  displayName: "\u82E6\u529B\u6015"
+  price: 20
+  description: 
+  hp: 20
+  attack: 49
+  armor: 0
+  moveSpeed: 42
+  attackRange: 42
+  attackInterval: 99
+  radius: 14
+  moveType: 0
+  attackType: 1
+  tags:
+  - explosive
+  idleSprite: {fileID: 21300000, guid: 9f5dc51adc3f65d418e4a33125e279d2, type: 3}
+  attackSprite: {fileID: 21300000, guid: 2635d1ba89c7ab64684245571081c5ee, type: 3}
+  skillConfig: {fileID: 0}

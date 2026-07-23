@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_evoker
+  m_EditorClassIdentifier: 
+  monsterId: evoker
+  displayName: "\u5524\u9B54\u8005"
+  price: 50
+  description: 
+  hp: 24
+  attack: 6
+  armor: 0
+  armorToughness: 0
+  moveSpeed: 40
+  attackRange: 160
+  attackInterval: 1.1
+  radius: 16
+  moveType: 0
+  attackType: 1
+  tags:
+  - summoner
+  onHitEffects: 
+  abilityComponentType: EvokerAbility
+  idleSprite: {fileID: 21300000, guid: ca63e5d70bc83c548aa226566604ad21, type: 3}
+  attackSprite: {fileID: 21300000, guid: 39455c9bfe17b404382fd6ae3b46a7c1, type: 3}
+  deadSprite: {fileID: 0}

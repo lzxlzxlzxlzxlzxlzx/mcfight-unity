@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_cataclysm_amethyst_crab
+  m_EditorClassIdentifier: 
+  monsterId: cataclysm_amethyst_crab
+  displayName: "\u7D2B\u6C34\u6676\u5DE8\u87F9"
+  price: 180
+  description: 
+  hp: 200
+  attack: 16
+  armor: 10
+  armorToughness: 0
+  moveSpeed: 30
+  attackRange: 48
+  attackInterval: 1
+  radius: 22
+  moveType: 0
+  attackType: 0
+  tags:
+  - amethyst_crab_special
+  onHitEffects: 
+  abilityComponentType: AmethystCrabAbility
+  idleSprite: {fileID: 21300000, guid: ee45292d22a32874fadf40f68ded94e2, type: 3}
+  attackSprite: {fileID: 21300000, guid: 885189b47ceaa0043878048c8ab75762, type: 3}
+  deadSprite: {fileID: 0}

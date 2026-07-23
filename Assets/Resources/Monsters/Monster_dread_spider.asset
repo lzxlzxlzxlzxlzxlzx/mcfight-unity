@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_dread_spider
+  m_EditorClassIdentifier: 
+  monsterId: dread_spider
+  displayName: "\u609A\u6016\u52AB\u86DB"
+  price: 0
+  description: 
+  hp: 40
+  attack: 7
+  armor: 10
+  armorToughness: 0
+  moveSpeed: 64
+  attackRange: 42
+  attackInterval: 1
+  radius: 16
+  moveType: 0
+  attackType: 0
+  tags:
+  - arthropod
+  onHitEffects: 
+  abilityComponentType: 
+  idleSprite: {fileID: 21300000, guid: 13bcb627588cc8f4da58da39fc9e9a4d, type: 3}
+  attackSprite: {fileID: 0}
+  deadSprite: {fileID: 0}

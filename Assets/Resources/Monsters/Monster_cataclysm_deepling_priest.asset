@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_cataclysm_deepling_priest
+  m_EditorClassIdentifier: 
+  monsterId: cataclysm_deepling_priest
+  displayName: "\u6E0A\u7075\u796D\u53F8"
+  price: 35
+  description: 
+  hp: 45
+  attack: 8
+  armor: 0
+  armorToughness: 0
+  moveSpeed: 40
+  attackRange: 96
+  attackInterval: 6
+  radius: 18
+  moveType: 0
+  attackType: 1
+  tags: []
+  onHitEffects: 
+  abilityComponentType: PriestAbility
+  idleSprite: {fileID: 21300000, guid: 005e754dd1957f24aa33b4c0494ab593, type: 3}
+  attackSprite: {fileID: 21300000, guid: 956813bee498c404db391d92776d9be5, type: 3}
+  deadSprite: {fileID: 0}

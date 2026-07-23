@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_alexsmobs_warped_mosco
+  m_EditorClassIdentifier: 
+  monsterId: alexsmobs_warped_mosco
+  displayName: "\u8BE1\u5F02\u868A\u9B3C"
+  price: 180
+  description: 
+  hp: 100
+  attack: 15
+  armor: 10
+  armorToughness: 0
+  moveSpeed: 58
+  attackRange: 42
+  attackInterval: 3
+  radius: 18
+  moveType: 0
+  attackType: 0
+  tags:
+  - mosco_special
+  - arthropod
+  onHitEffects: 
+  abilityComponentType: WarpedMoscoAbility
+  idleSprite: {fileID: 21300000, guid: 4ef892bab34cac14ca4e491ee1fb2480, type: 3}
+  attackSprite: {fileID: 21300000, guid: 20a2cdcb33291bc4b95cf2148a523490, type: 3}
+  deadSprite: {fileID: 0}

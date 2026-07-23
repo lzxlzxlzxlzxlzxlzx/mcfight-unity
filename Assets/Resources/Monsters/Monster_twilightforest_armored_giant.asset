@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_twilightforest_armored_giant
+  m_EditorClassIdentifier: 
+  monsterId: twilightforest_armored_giant
+  displayName: "\u6B66\u88C5\u5DE8\u4EBA"
+  price: 120
+  description: 
+  hp: 80
+  attack: 6
+  armor: 15
+  armorToughness: 0
+  moveSpeed: 58
+  attackRange: 42
+  attackInterval: 0.85
+  radius: 18
+  moveType: 0
+  attackType: 0
+  tags: []
+  onHitEffects: 
+  abilityComponentType: 
+  idleSprite: {fileID: 21300000, guid: 4ea3b411155643c4babb4d497675c16d, type: 3}
+  attackSprite: {fileID: 21300000, guid: 5f2fb3be6e8464546af78bfa076f8f75, type: 3}
+  deadSprite: {fileID: 0}

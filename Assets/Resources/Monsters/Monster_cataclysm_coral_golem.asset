@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_cataclysm_coral_golem
+  m_EditorClassIdentifier: 
+  monsterId: cataclysm_coral_golem
+  displayName: "\u73CA\u745A\u5080\u5121"
+  price: 80
+  description: 
+  hp: 110
+  attack: 12.5
+  armor: 5
+  armorToughness: 0
+  moveSpeed: 30
+  attackRange: 200
+  attackInterval: 3
+  radius: 18
+  moveType: 0
+  attackType: 0
+  tags:
+  - coral_leap_special
+  onHitEffects: 
+  abilityComponentType: CoralLeapAbility
+  idleSprite: {fileID: 21300000, guid: dd587049ec2546e46a42c3e0e000f453, type: 3}
+  attackSprite: {fileID: 21300000, guid: ce5dae8ccf8e59e4d9c478cba86b0674, type: 3}
+  deadSprite: {fileID: 0}

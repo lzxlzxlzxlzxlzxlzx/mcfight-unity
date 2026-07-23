@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6df93b3137e8147931ec798dace218, type: 3}
+  m_Name: Monster_cataclysm_ender_golem
+  m_EditorClassIdentifier: 
+  monsterId: cataclysm_ender_golem
+  displayName: "\u672B\u5F71\u5080\u5121"
+  price: 200
+  description: 
+  hp: 120
+  attack: 13
+  armor: 12
+  armorToughness: 0
+  moveSpeed: 40
+  attackRange: 42
+  attackInterval: 2
+  radius: 20
+  moveType: 0
+  attackType: 0
+  tags:
+  - ender_golem_boss
+  onHitEffects: 
+  abilityComponentType: EnderGolemAbility
+  idleSprite: {fileID: 21300000, guid: a84106fb7a80d1b4597c6839f6414ab4, type: 3}
+  attackSprite: {fileID: 21300000, guid: 9e3e33874789ded4cbf4fef87b620848, type: 3}
+  deadSprite: {fileID: 0}

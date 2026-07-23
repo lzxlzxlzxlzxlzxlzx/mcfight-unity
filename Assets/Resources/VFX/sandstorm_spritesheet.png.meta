@@ -1,0 +1,875 @@
+fileFormatVersion: 2
+guid: 13c2a35b148ed1b48a2e972b68013308
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: sandstorm_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca02ccaadcccb0df0800000000000000
+      internalID: -212851373664100180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_01
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b33256d60b4f3f20800000000000000
+      internalID: 3404522336052982706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_02
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0688a1bd0dc1485c0800000000000000
+      internalID: -4214211667957217184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_03
+      rect:
+        serializedVersion: 2
+        x: 1428
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0db7da68463eaefa0800000000000000
+      internalID: -5770549951626118192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_04
+      rect:
+        serializedVersion: 2
+        x: 1904
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 268234e8cd7ae0bd0800000000000000
+      internalID: -2662005764007974814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_05
+      rect:
+        serializedVersion: 2
+        x: 2380
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d36fd2ce72b88080800000000000000
+      internalID: -9184895182517083179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_06
+      rect:
+        serializedVersion: 2
+        x: 2856
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edf540cab518e0a50800000000000000
+      internalID: 6489266343815438302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_07
+      rect:
+        serializedVersion: 2
+        x: 3332
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67b46b9f822811770800000000000000
+      internalID: 8579781877617281910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_08
+      rect:
+        serializedVersion: 2
+        x: 3808
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22a32ba0700ca86c0800000000000000
+      internalID: -4140285770936993246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_09
+      rect:
+        serializedVersion: 2
+        x: 4284
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed72769e03b4eeac0800000000000000
+      internalID: -3824036360144607266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_10
+      rect:
+        serializedVersion: 2
+        x: 4760
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89dfcb039a7c7d150800000000000000
+      internalID: 5897401766546046360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_11
+      rect:
+        serializedVersion: 2
+        x: 5236
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e15f403c2e289e10800000000000000
+      internalID: 2204562784921801189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_12
+      rect:
+        serializedVersion: 2
+        x: 5712
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45af53c0d7acd6b20800000000000000
+      internalID: 3129379954516949588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_13
+      rect:
+        serializedVersion: 2
+        x: 6188
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b0a952a0fd439e10800000000000000
+      internalID: 2203190338625577143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_14
+      rect:
+        serializedVersion: 2
+        x: 6664
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d09e2cd00a5a0c70800000000000000
+      internalID: 8938055370210709712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_15
+      rect:
+        serializedVersion: 2
+        x: 7140
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5d3a4d664b216570800000000000000
+      internalID: 8458089156659789149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_16
+      rect:
+        serializedVersion: 2
+        x: 7616
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6903a3a964e230f0800000000000000
+      internalID: -1138596613403244181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_17
+      rect:
+        serializedVersion: 2
+        x: 8092
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1cacbda2a09b80a0800000000000000
+      internalID: -6878244977504375780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_18
+      rect:
+        serializedVersion: 2
+        x: 8568
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4851221f609e974c0800000000000000
+      internalID: -4289140954069068412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_19
+      rect:
+        serializedVersion: 2
+        x: 9044
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63a81ed17a2d8c3f0800000000000000
+      internalID: -880222111948240330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_20
+      rect:
+        serializedVersion: 2
+        x: 9520
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 577e92b4913855f80800000000000000
+      internalID: -8118438608606992523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_21
+      rect:
+        serializedVersion: 2
+        x: 9996
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcdbdbe072342e2c0800000000000000
+      internalID: -4403883650584822321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_22
+      rect:
+        serializedVersion: 2
+        x: 10472
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2ef33e7cbb0be240800000000000000
+      internalID: 4821960730229341740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_23
+      rect:
+        serializedVersion: 2
+        x: 10948
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ded11b68506742ec0800000000000000
+      internalID: -3592616836628144659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_24
+      rect:
+        serializedVersion: 2
+        x: 11424
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa49e8ca516a52840800000000000000
+      internalID: 5198743956888655018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_25
+      rect:
+        serializedVersion: 2
+        x: 11900
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 026265474262da240800000000000000
+      internalID: 4804538315486668320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_26
+      rect:
+        serializedVersion: 2
+        x: 12376
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29c320ed928217920800000000000000
+      internalID: 2986212188206808210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_27
+      rect:
+        serializedVersion: 2
+        x: 12852
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 184366ec4e42b4d40800000000000000
+      internalID: 5569585929307698305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_28
+      rect:
+        serializedVersion: 2
+        x: 13328
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c811686185eaed560800000000000000
+      internalID: 7340496136018727308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_29
+      rect:
+        serializedVersion: 2
+        x: 13804
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ea91e2a9bd30c4a0800000000000000
+      internalID: -6575187588449985822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_30
+      rect:
+        serializedVersion: 2
+        x: 14280
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 173e5c123f2046720800000000000000
+      internalID: 2838396908417180529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_31
+      rect:
+        serializedVersion: 2
+        x: 14756
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0c81de9db48979e0800000000000000
+      internalID: -1623120240742134773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_32
+      rect:
+        serializedVersion: 2
+        x: 15232
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d724d3207b76be040800000000000000
+      internalID: 4677946673668637309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sandstorm_33
+      rect:
+        serializedVersion: 2
+        x: 15708
+        y: 0
+        width: 476
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b79f5bc85665ae6b0800000000000000
+      internalID: -5266301820103952005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      sandstorm_00: -212851373664100180
+      sandstorm_01: 3404522336052982706
+      sandstorm_02: -4214211667957217184
+      sandstorm_03: -5770549951626118192
+      sandstorm_04: -2662005764007974814
+      sandstorm_05: -9184895182517083179
+      sandstorm_06: 6489266343815438302
+      sandstorm_07: 8579781877617281910
+      sandstorm_08: -4140285770936993246
+      sandstorm_09: -3824036360144607266
+      sandstorm_10: 5897401766546046360
+      sandstorm_11: 2204562784921801189
+      sandstorm_12: 3129379954516949588
+      sandstorm_13: 2203190338625577143
+      sandstorm_14: 8938055370210709712
+      sandstorm_15: 8458089156659789149
+      sandstorm_16: -1138596613403244181
+      sandstorm_17: -6878244977504375780
+      sandstorm_18: -4289140954069068412
+      sandstorm_19: -880222111948240330
+      sandstorm_20: -8118438608606992523
+      sandstorm_21: -4403883650584822321
+      sandstorm_22: 4821960730229341740
+      sandstorm_23: -3592616836628144659
+      sandstorm_24: 5198743956888655018
+      sandstorm_25: 4804538315486668320
+      sandstorm_26: 2986212188206808210
+      sandstorm_27: 5569585929307698305
+      sandstorm_28: 7340496136018727308
+      sandstorm_29: -6575187588449985822
+      sandstorm_30: 2838396908417180529
+      sandstorm_31: -1623120240742134773
+      sandstorm_32: 4677946673668637309
+      sandstorm_33: -5266301820103952005
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
