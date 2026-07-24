@@ -45,6 +45,9 @@ namespace MCFight
             Instance = this;
             Database = new MonsterDatabase();
             Database.LoadAll();
+
+            // 默认窗口化 1280x720
+            Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
         }
 
         void OnDestroy()

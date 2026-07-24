@@ -16,6 +16,10 @@ namespace MCFight
         public Text titleText;
         public Text subtitleText;
 
+        [Header("窗口模式")]
+        public Button fullscreenToggleBtn;
+        public Text fullscreenToggleText;
+
         private GameManager _gm;
 
         void Start()
@@ -25,32 +29,37 @@ namespace MCFight
             if (pvAIButton) pvAIButton.onClick.AddListener(OnPvAI);
             if (codexButton) codexButton.onClick.AddListener(OnCodex);
             if (quitButton) quitButton.onClick.AddListener(OnQuit);
+            if (fullscreenToggleBtn) fullscreenToggleBtn.onClick.AddListener(OnToggleFullscreen);
+            UpdateFullscreenText();
         }
 
-        public void Show()
+        public void Show() { gameObject.SetActive(true); }
+        public void Hide() { gameObject.SetActive(false); }
+
+        void UpdateFullscreenText()
         {
-            gameObject.SetActive(true);
+            if (fullscreenToggleText != null)
+                fullscreenToggleText.text = Screen.fullScreen ? "全屏模式" : "窗口模式";
         }
 
-        public void Hide()
+        void OnToggleFullscreen()
         {
-            gameObject.SetActive(false);
+            if (Screen.fullScreen)
+            {
+                // 切换到窗口模式
+                Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
+            }
+            else
+            {
+                // 切换到全屏模式
+                Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, FullScreenMode.FullScreenWindow);
+            }
+            UpdateFullscreenText();
         }
 
-        void OnPvP()
-        {
-            if (_gm != null) _gm.StartPvP();
-        }
-
-        void OnPvAI()
-        {
-            if (_gm != null) _gm.StartPvAI();
-        }
-
-        void OnCodex()
-        {
-            if (_gm != null) _gm.EnterCodex();
-        }
+        void OnPvP() { if (_gm != null) _gm.StartPvP(); }
+        void OnPvAI() { if (_gm != null) _gm.StartPvAI(); }
+        void OnCodex() { if (_gm != null) _gm.EnterCodex(); }
 
         void OnQuit()
         {

@@ -14,15 +14,8 @@ namespace MCFight
 
         void CreateBackground()
         {
-            // Load background sprite
             if (_bgSprite == null)
                 _bgSprite = Resources.Load<Sprite>("Sprites/UI/battlefield_bg");
-            
-            if (_bgSprite == null)
-            {
-                // Fallback: try direct path
-                _bgSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/UI/battlefield_bg.jpg");
-            }
 
             if (_bgSprite != null)
             {
@@ -31,8 +24,6 @@ namespace MCFight
                 var bgSr = bgGo.AddComponent<SpriteRenderer>();
                 bgSr.sprite = _bgSprite;
                 bgSr.sortingOrder = -100;
-                // Sprite is 1536x1024 at 100 pixelsPerUnit = 15.36x10.24 world units
-                // Need to cover 1280x720 world units
                 float spriteWorldW = _bgSprite.rect.width / _bgSprite.pixelsPerUnit;
                 float spriteWorldH = _bgSprite.rect.height / _bgSprite.pixelsPerUnit;
                 float scaleX = 1280f / spriteWorldW;
