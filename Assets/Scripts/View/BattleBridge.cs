@@ -129,15 +129,26 @@ namespace MCFight
 
             // 清理所有 VFX 粒子
             VFXSpawner.ClearAll();
+
+            // 清理所有 VFXSpriteView 和 SlashView 特效
+            var vfxViews = FindObjectsByType<VFXSpriteView>(FindObjectsSortMode.None);
+            foreach (var v in vfxViews)
+                if (v != null) Destroy(v.gameObject);
+            var slashViews = FindObjectsByType<SlashView>(FindObjectsSortMode.None);
+            foreach (var s in slashViews)
+                if (s != null) Destroy(s.gameObject);
         }
+
+        /// <summary> 战斗速度倍率（1x/2x/4x） </summary>
+        public float SpeedMultiplier = 1f;
 
         void Update()
         {
             if (Simulator == null || Simulator.IsFinished) return;
 
             // 固定步长模拟：累积真实时间，每 TICK_DT 跑一次
-            _accumulatedTime += Time.deltaTime;
-            int maxSteps = 3; // 防止卡顿后追帧过多
+            _accumulatedTime += Time.deltaTime * SpeedMultiplier;
+            int maxSteps = SpeedMultiplier >= 4f ? 8 : SpeedMultiplier >= 2f ? 6 : 3;
 
             while (_accumulatedTime >= BattleConstants.TICK_DT && maxSteps > 0)
             {

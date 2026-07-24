@@ -15,7 +15,10 @@ namespace MCFight
         public Button deployButton;
         public Button autoDeployButton;
 
-        private List<MonsterDefSO> _sortedMonsters;
+        [Header("Filter")]
+        public MonsterFilterBar filterBar;
+
+        private List<MonsterDefSO> _allMonsters;
         private GameManager _gm;
         private ScrollRect _scrollRect;
 
@@ -23,12 +26,26 @@ namespace MCFight
         {
             _gm = GameManager.Instance;
             if (_gm == null) return;
-            if (_sortedMonsters == null || _sortedMonsters.Count == 0)
-                _sortedMonsters = new List<MonsterDefSO>(_gm.Database.GetAllSortedByPrice());
+            if (_allMonsters == null || _allMonsters.Count == 0)
+                _allMonsters = new List<MonsterDefSO>(_gm.Database.GetAllSortedByPrice());
 
             if (deployButton != null) { deployButton.onClick.RemoveAllListeners(); deployButton.onClick.AddListener(OnDeployClick); }
             if (autoDeployButton != null) { autoDeployButton.onClick.RemoveAllListeners(); autoDeployButton.onClick.AddListener(OnAutoDeployClick); }
 
+            // Team switching: click gold text to toggle team
+            var goldBtn = goldText?.GetComponent<Button>();
+            if (goldBtn == null && goldText != null)
+                goldBtn = goldText.gameObject.AddComponent<Button>();
+            if (goldBtn != null)
+            {
+                goldBtn.onClick.RemoveAllListeners();
+                goldBtn.onClick.AddListener(() =>
+                {
+                    if (_gm != null) _gm.SwitchTeam(_gm.ActiveTeam == 0 ? 1 : 0);
+                });
+            }
+
+            // Legacy: still try to find old team buttons (if present)
             var team0Btn = transform.Find("Team0Btn")?.GetComponent<Button>();
             var team1Btn = transform.Find("Team1Btn")?.GetComponent<Button>();
             if (team0Btn != null) { team0Btn.onClick.RemoveAllListeners(); team0Btn.onClick.AddListener(() => _gm.SwitchTeam(0)); }
@@ -38,6 +55,10 @@ namespace MCFight
             var autoBtn = transform.Find("AutoBtn")?.GetComponent<Button>();
             if (deployBtn != null) { deployBtn.onClick.RemoveAllListeners(); deployBtn.onClick.AddListener(OnDeployClick); }
             if (autoBtn != null) { autoBtn.onClick.RemoveAllListeners(); autoBtn.onClick.AddListener(OnAutoDeployClick); }
+
+            // Init filter bar
+            if (filterBar != null)
+                filterBar.Init(Refresh);
 
             Refresh();
         }
@@ -59,8 +80,8 @@ namespace MCFight
         {
             gameObject.SetActive(true);
             if (_gm == null) _gm = GameManager.Instance;
-            if (_gm != null && (_sortedMonsters == null || _sortedMonsters.Count == 0))
-                _sortedMonsters = new List<MonsterDefSO>(_gm.Database.GetAllSortedByPrice());
+            if (_gm != null && (_allMonsters == null || _allMonsters.Count == 0))
+                _allMonsters = new List<MonsterDefSO>(_gm.Database.GetAllSortedByPrice());
             Refresh();
         }
         public void Hide() { gameObject.SetActive(false); }
@@ -70,11 +91,14 @@ namespace MCFight
             if (_gm == null) _gm = GameManager.Instance;
             if (_gm == null) return;
 
-            if (goldText == null) return;
-            goldText.text = $"蓝方: {_gm.Gold[0]}G  |  红方: {_gm.Gold[1]}G";
-            if (teamLabel == null) return;
-            teamLabel.text = _gm.ActiveTeam == 0 ? "蓝方" : "红方";
-            teamLabel.color = _gm.ActiveTeam == 0 ? new Color(0.3f, 0.6f, 1f) : new Color(1f, 0.4f, 0.3f);
+            if (goldText != null)
+            {
+                // Highlight active team with color
+                string blueStr = _gm.ActiveTeam == 0 ? $"<color=#5AAAFF>蓝方: {_gm.Gold[0]}G</color>" : $"<color=#888888>蓝方: {_gm.Gold[0]}G</color>";
+                string redStr = _gm.ActiveTeam == 1 ? $"<color=#FF6655>红方: {_gm.Gold[1]}G</color>" : $"<color=#888888>红方: {_gm.Gold[1]}G</color>";
+                goldText.text = $"  {blueStr}   |   {redStr}  ";
+                goldText.supportRichText = true;
+            }
 
             if (deployButton != null) deployButton.interactable = _gm.CanStartDeploy();
             if (autoDeployButton != null) autoDeployButton.interactable = _gm.CanStartDeploy();
@@ -85,10 +109,17 @@ namespace MCFight
             if (aBtn != null) aBtn.interactable = _gm.CanStartDeploy();
 
             if (cardGridParent == null) return;
+
+            // Clear existing cards
             for (int i = cardGridParent.childCount - 1; i >= 0; i--)
                 Destroy(cardGridParent.GetChild(i).gameObject);
 
-            foreach (var def in _sortedMonsters)
+            // Apply filter
+            var filtered = (filterBar != null)
+                ? filterBar.Apply(_allMonsters)
+                : _allMonsters;
+
+            foreach (var def in filtered)
             {
                 if (def.price <= 0) continue;
                 var card = Instantiate(cardPrefab, cardGridParent);
@@ -99,15 +130,20 @@ namespace MCFight
 
         void SetupCard(GameObject card, MonsterDefSO def)
         {
+            // Try MonsterCardView first
+            var cardView = card.GetComponent<MonsterCardView>();
+            if (cardView != null)
+            {
+                cardView.Bind(def, MonsterCardView.Mode.Shop, _gm);
+                return;
+            }
+
+            // Fallback: manual setup (for backward compatibility)
             var bg = card.GetComponent<Image>();
-            if (bg != null) bg.color = GetRarityColor(def.price);
+            if (bg != null) bg.color = MonsterCardView.GetRarityColor(def.price);
 
             var art = card.transform.Find("Art")?.GetComponent<Image>();
-            if (art != null && def.idleSprite != null)
-            {
-                art.sprite = def.idleSprite;
-                art.preserveAspect = true;
-            }
+            if (art != null && def.idleSprite != null) { art.sprite = def.idleSprite; art.preserveAspect = true; }
 
             var nameTxt = card.transform.Find("Name/NameText")?.GetComponent<Text>();
             if (nameTxt != null) nameTxt.text = def.displayName;
@@ -117,8 +153,7 @@ namespace MCFight
 
             var statsTxt = card.transform.Find("Stats")?.GetComponent<Text>();
             if (statsTxt != null)
-                statsTxt.text = $"HP {def.hp:F0}  ATK {def.attack:F0}" +
-                    (def.armor > 0 ? $"  ARM {def.armor:F0}" : "");
+                statsTxt.text = $"HP {def.hp:F0}  ATK {def.attack:F0}" + (def.armor > 0 ? $"  ARM {def.armor:F0}" : "");
 
             var buyBtn = card.transform.Find("BuyBtn")?.GetComponent<Button>();
             if (buyBtn != null)
@@ -127,7 +162,6 @@ namespace MCFight
                 buyBtn.interactable = canAfford;
                 var buyTxt = buyBtn.transform.Find("Text")?.GetComponent<Text>();
                 if (buyTxt != null) buyTxt.text = canAfford ? "购买" : "不足";
-
                 string id = def.monsterId;
                 buyBtn.onClick.RemoveAllListeners();
                 buyBtn.onClick.AddListener(() => _gm.BuyMonster(id, 1));
@@ -140,7 +174,6 @@ namespace MCFight
                 bulkBtn.interactable = maxBatch > 0;
                 var bulkTxt = bulkBtn.transform.Find("Text")?.GetComponent<Text>();
                 if (bulkTxt != null) bulkTxt.text = maxBatch > 0 ? $"×{maxBatch}" : "×0";
-
                 string id = def.monsterId;
                 int max = maxBatch;
                 bulkBtn.onClick.RemoveAllListeners();
@@ -157,15 +190,6 @@ namespace MCFight
             }
         }
 
-        Color GetRarityColor(int price)
-        {
-            if (price >= 700) return new Color(0.85f, 0.45f, 0.05f, 1f);
-            if (price >= 400) return new Color(0.55f, 0.25f, 0.7f, 1f);
-            if (price >= 150) return new Color(0.15f, 0.3f, 0.8f, 1f);
-            if (price >= 50) return new Color(0.1f, 0.55f, 0.2f, 1f);
-            return new Color(0.5f, 0.5f, 0.55f, 1f);
-        }
-
         void OnDeployClick() { _gm.StartDeploy(); }
 
         void OnAutoDeployClick()
@@ -179,7 +203,7 @@ namespace MCFight
         void AutoBuyTeam(int team)
         {
             _gm.ActiveTeam = team;
-            foreach (var def in _sortedMonsters)
+            foreach (var def in _allMonsters)
             {
                 if (def.price <= 0) continue;
                 while (_gm.Gold[team] >= def.price)

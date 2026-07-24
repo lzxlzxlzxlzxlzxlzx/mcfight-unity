@@ -16,6 +16,9 @@ namespace MCFight
         public Text detailText;
         public Button detailBackButton;
 
+        [Header("Filter")]
+        public MonsterFilterBar filterBar;
+
         private GameManager _gm;
         private List<MonsterDefSO> _allMonsters;
 
@@ -34,6 +37,11 @@ namespace MCFight
             _allMonsters = new List<MonsterDefSO>(_gm.Database.GetAllSortedByPrice());
             if (cardGridParent == null) return;
             if (detailPanel != null) detailPanel.SetActive(false);
+
+            // Init filter bar
+            if (filterBar != null)
+                filterBar.Init(PopulateCards);
+
             PopulateCards();
         }
 
@@ -41,10 +49,18 @@ namespace MCFight
 
         void PopulateCards()
         {
+            if (cardGridParent == null) return;
+
             for (int i = cardGridParent.childCount - 1; i >= 0; i--)
                 Destroy(cardGridParent.GetChild(i).gameObject);
 
-            foreach (var def in _allMonsters)
+            var filtered = (filterBar != null && _allMonsters != null)
+                ? filterBar.Apply(_allMonsters)
+                : _allMonsters;
+
+            if (filtered == null) return;
+
+            foreach (var def in filtered)
             {
                 if (def.price <= 0) continue;
                 var card = Instantiate(cardPrefab, cardGridParent);
@@ -55,8 +71,22 @@ namespace MCFight
 
         void SetupCard(GameObject card, MonsterDefSO def)
         {
+            // Try MonsterCardView first
+            var cardView = card.GetComponent<MonsterCardView>();
+            if (cardView != null)
+            {
+                cardView.Bind(def, MonsterCardView.Mode.Codex, _gm);
+                // Add click listener for detail
+                var cardBtn = card.GetComponent<Button>();
+                if (cardBtn == null) cardBtn = card.AddComponent<Button>();
+                cardBtn.onClick.RemoveAllListeners();
+                cardBtn.onClick.AddListener(() => ShowDetail(def));
+                return;
+            }
+
+            // Fallback: manual setup
             var bg = card.GetComponent<Image>();
-            if (bg != null) bg.color = GetRarityColor(def.price);
+            if (bg != null) bg.color = MonsterCardView.GetRarityColor(def.price);
 
             var art = card.transform.Find("Art")?.GetComponent<Image>();
             if (art != null && def.idleSprite != null) { art.sprite = def.idleSprite; art.preserveAspect = true; }
@@ -132,15 +162,6 @@ namespace MCFight
                 "cataclysm_kobolediator" => "Charge: dash to target, 18 dmg AOE\nTriple Slash: 3s, 2x cone 14 + 18 finale\nStomp: cone 224px, 14 dmg\nBlocks 50% ranged. Cannot hit air.",
                 _ => "Standard attack pattern",
             };
-        }
-
-        Color GetRarityColor(int price)
-        {
-            if (price >= 700) return new Color(0.85f, 0.45f, 0.05f, 1f);
-            if (price >= 400) return new Color(0.55f, 0.25f, 0.7f, 1f);
-            if (price >= 150) return new Color(0.15f, 0.3f, 0.8f, 1f);
-            if (price >= 50) return new Color(0.1f, 0.55f, 0.2f, 1f);
-            return new Color(0.5f, 0.5f, 0.55f, 1f);
         }
 
         void OnBack() { if (_gm != null) _gm.ExitCodex(); }

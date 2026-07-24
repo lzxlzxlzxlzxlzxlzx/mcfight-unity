@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22b9d2e811e87ea49b79ef5181b074e1, type: 3}
+  m_Name: UITheme
+  m_EditorClassIdentifier: 
+  TeamBlue: {r: 0.3, g: 0.6, b: 1, a: 1}
+  TeamRed: {r: 1, g: 0.4, b: 0.3, a: 1}
+  TeamBlueDim: {r: 0.2, g: 0.4, b: 0.7, a: 0.6}
+  TeamRedDim: {r: 0.7, g: 0.25, b: 0.2, a: 0.6}
+  RarityCommon: {r: 0.55, g: 0.55, b: 0.6, a: 1}
+  RarityRare: {r: 0.15, g: 0.55, b: 0.25, a: 1}
+  RarityEpic: {r: 0.55, g: 0.25, b: 0.7, a: 1}
+  RarityLegendary: {r: 0.85, g: 0.45, b: 0.05, a: 1}
+  Gold: {r: 1, g: 0.84, b: 0, a: 1}
+  Success: {r: 0.2, g: 0.8, b: 0.3, a: 1}
+  Danger: {r: 0.9, g: 0.25, b: 0.2, a: 1}
+  PanelOverlay: {r: 0, g: 0, b: 0, a: 0.55}
+  PanelBg: {r: 0.12, g: 0.12, b: 0.15, a: 0.92}
+  BtnBlueNormal: {fileID: 21300000, guid: 6636e8f9c2bbba84481da8447cc9b5e8, type: 3}
+  BtnBlueHover: {fileID: 21300000, guid: 9a4b80fa731eeb248a8ca91ee384c469, type: 3}
+  BtnRedNormal: {fileID: 21300000, guid: 683690969a16c9544b7c2a23f3a3f623, type: 3}
+  BtnRedHover: {fileID: 21300000, guid: d4a78ea8bd0157945a4687cf6bd4fa25, type: 3}
+  BtnGreenNormal: {fileID: 21300000, guid: 6a6236813fe31ed4b84f262a4da478dc, type: 3}
+  BtnGreenHover: {fileID: 21300000, guid: 902dcbbbb68038843b3b0e79233af1e3, type: 3}
+  BtnYellowNormal: {fileID: 21300000, guid: 0d39e3045a69ab040acdd71ae589ede3, type: 3}
+  BtnGreyNormal: {fileID: 21300000, guid: cb74119b0c242f746b83c1d1b2678a5f, type: 3}
+  BtnGreyHover: {fileID: 21300000, guid: 42f2eb9fee3e6a34fa384b04e0b73cb5, type: 3}
+  PanelSprite: {fileID: 21300000, guid: cb74119b0c242f746b83c1d1b2678a5f, type: 3}
+  PanelModalSprite: {fileID: 21300000, guid: 91cebbb32872f5b4aaa32f70b111dfbc, type: 3}
+  GoldIcon: {fileID: 0}
+  StarIcon: {fileID: 21300000, guid: b211b5bfc04def540ac32ff4a292695a, type: 3}
+  CloseIcon: {fileID: 0}
