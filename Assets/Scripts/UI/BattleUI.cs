@@ -79,7 +79,7 @@ namespace MCFight
 
             if (statusText != null) statusText.text = $"蓝 {alive0} vs {alive1} 红";
 
-            if (!_battleEnded && sim.IsFinished && _gm.Phase == GamePhase.Battle)
+            if (!_battleEnded && sim.IsFinished && _gm.Phase == GamePhase.Battle && !_gm.IsLabMode)
             {
                 _battleEnded = true;
                 _gm.OnBattleEnd(sim.Winner);

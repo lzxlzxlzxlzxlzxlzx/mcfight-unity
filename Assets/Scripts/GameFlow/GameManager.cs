@@ -30,6 +30,7 @@ namespace MCFight
 
         [Header("状态")]
         public GamePhase Phase = GamePhase.MainMenu;
+        public bool IsLabMode = false;
         public GameMode Mode = GameMode.PvP;
         public int[] Gold = { BattleConstants.INITIAL_GOLD, BattleConstants.INITIAL_GOLD };
         public List<ShopEntry> ShopEntries = new();
@@ -38,7 +39,7 @@ namespace MCFight
         public int Winner = -1;
 
         /// <summary> 战斗统计收集器 </summary>
-        public BattleStatsCollector StatsCollector { get; private set; }
+        public BattleStatsCollector StatsCollector { get; set; }
 
         void Awake()
         {
@@ -203,8 +204,22 @@ namespace MCFight
 
             int idx = ShopEntries.FindIndex(e => e.Team == ActiveTeam);
             if (idx < 0) return;
-            var entry = ShopEntries[idx];
-            ShopEntries.RemoveAt(idx);
+            PlaceSpecificUnit(idx, worldPos);
+        }
+
+        public bool PlaceSpecificUnit(int shopEntryIdx, Vector2 worldPos)
+        {
+            if (Phase != GamePhase.Deploy) return false;
+            if (shopEntryIdx < 0 || shopEntryIdx >= ShopEntries.Count) return false;
+            var entry = ShopEntries[shopEntryIdx];
+            if (entry.Team != ActiveTeam) return false;
+
+            bool onLeft = worldPos.x <= BattleConstants.FIELD_MID_X - 30f;
+            bool onRight = worldPos.x >= BattleConstants.FIELD_MID_X + 30f;
+            if (ActiveTeam == 0 && !onLeft) return false;
+            if (ActiveTeam == 1 && !onRight) return false;
+
+            ShopEntries.RemoveAt(shopEntryIdx);
 
             var def = Database.GetById(entry.MonsterId);
             float half = def != null ? Mathf.Max(def.radius, 20f) : 20f;
@@ -213,6 +228,7 @@ namespace MCFight
 
             DeployedUnits.Add(new DeployedUnit { MonsterId = entry.MonsterId, Team = ActiveTeam, X = x, Y = y });
             if (deployUI) deployUI.Refresh();
+            return true;
         }
 
         public int GetRemainingCount(int team)
@@ -259,7 +275,15 @@ namespace MCFight
 
         public void StartBattle()
         {
-            if (DeployedUnits.Count == 0) return;
+            if (DeployedUnits.Count == 0 && ShopEntries.Count == 0) return;
+
+            // PvAI: 如果红方还有未部署的商店条目，自动部署
+            if (Mode == GameMode.PvAI && GetRemainingCount(1) > 0)
+            {
+                var rng = new System.Random(System.DateTime.Now.Millisecond);
+                AIDeployTeam(1, rng);
+            }
+
             Phase = GamePhase.Battle;
             HideAllUI();
             if (battleUI) battleUI.Show();
@@ -303,7 +327,7 @@ namespace MCFight
             EnterMainMenu();
         }
 
-        void HideAllUI()
+        public void HideAllUI()
         {
             if (shopUI) shopUI.Hide();
             if (deployUI) deployUI.Hide();

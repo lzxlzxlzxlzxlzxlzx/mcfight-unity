@@ -1,0 +1,83 @@
+{
+    "data": {
+        "session_id": "session_20260730_114723",
+        "plan_title": "最贵怪物单挑测试",
+        "start_time": "2026-07-30T11:44:50.0659412+08:00",
+        "end_time": "2026-07-30T11:47:23.0709412+08:00",
+        "total_matches": 5,
+        "completed_matches": 5,
+        "skipped_matches": 0,
+        "summary": "共 5 场战斗，2 个单位参与。\r\n最强单位: 撼地斯拉 (胜率 100%, PowerScore 0.99)\r\n最显著克制: 撼地斯拉 > 暝煌龙 (胜率 100%)\r\n超模单位: 2 个",
+        "key_findings": [
+            "撼地斯拉 以 100% 胜率排名第一",
+            "撼地斯拉 对 暝煌龙 有明显克制 (100%)",
+            "发现 2 个可能超模的单位"
+        ],
+        "rankings": [
+            {
+                "monster_id": "alexscaves_tremorzilla",
+                "display_name": "撼地斯拉",
+                "price": 1000,
+                "wins": 5,
+                "losses": 0,
+                "draws": 0,
+                "total": 5,
+                "win_rate": 1.0,
+                "avg_damage_dealt": 1764.0,
+                "avg_kills": 25.799999237060548,
+                "power_score": 0.9929987192153931,
+                "power_delta": 0.9929987192153931,
+                "balance_status": "Overpowered",
+                "confidence": 0.5
+            },
+            {
+                "monster_id": "alexscaves_luxtructosaurus",
+                "display_name": "暝煌龙",
+                "price": 800,
+                "wins": 0,
+                "losses": 5,
+                "draws": 0,
+                "total": 5,
+                "win_rate": 0.0,
+                "avg_damage_dealt": 382.5599365234375,
+                "avg_kills": 0.0,
+                "power_score": 0.25,
+                "power_delta": 0.25,
+                "balance_status": "Overpowered",
+                "confidence": 0.5
+            }
+        ],
+        "counters": [
+            {
+                "attacker_id": "alexscaves_tremorzilla",
+                "attacker_name": "撼地斯拉",
+                "target_id": "alexscaves_luxtructosaurus",
+                "target_name": "暝煌龙",
+                "win_rate": 1.0,
+                "sample_size": 5
+            }
+        ],
+        "suggestions": [
+            {
+                "monster_id": "alexscaves_tremorzilla",
+                "display_name": "撼地斯拉",
+                "field": "price",
+                "current_value": 1000.0,
+                "suggested_value": 1200.0,
+                "change_percent": 20.0,
+                "reason": "胜率 100%，PowerDelta +0.99，建议涨价 20%",
+                "confidence": 0.5
+            },
+            {
+                "monster_id": "alexscaves_luxtructosaurus",
+                "display_name": "暝煌龙",
+                "field": "price",
+                "current_value": 800.0,
+                "suggested_value": 961.0,
+                "change_percent": 20.0,
+                "reason": "胜率 0%，PowerDelta +0.25，建议涨价 20%",
+                "confidence": 0.5
+            }
+        ]
+    }
+}

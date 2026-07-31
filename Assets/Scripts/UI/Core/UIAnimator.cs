@@ -83,5 +83,42 @@ namespace MCFight
             }
             target.text = to.ToString();
         }
+
+        /// <summary> 金币数字弹跳动画：Scale 1→1.25→1 </summary>
+        public static IEnumerator GoldBump(Transform t, float duration = 0.3f)
+        {
+            float elapsed = 0f;
+            Vector3 original = t.localScale;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float k = elapsed / duration;
+                float scale = 1f + 0.25f * Mathf.Sin(k * Mathf.PI);
+                t.localScale = original * scale;
+                yield return null;
+            }
+            t.localScale = original;
+        }
+
+        /// <summary> 卡片弹出动画：Scale 0.3→1.0 带 overshoot </summary>
+        public static IEnumerator CardPop(Transform t, float duration = 0.2f)
+        {
+            float elapsed = 0f;
+            Vector3 original = Vector3.one;
+            t.localScale = Vector3.one * 0.3f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float k = elapsed / duration;
+                float scale;
+                if (k < 0.7f)
+                    scale = Mathf.Lerp(0.3f, 1.15f, k / 0.7f);
+                else
+                    scale = Mathf.Lerp(1.15f, 1f, (k - 0.7f) / 0.3f);
+                t.localScale = original * scale;
+                yield return null;
+            }
+            t.localScale = original;
+        }
     }
 }

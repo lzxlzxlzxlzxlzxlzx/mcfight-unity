@@ -88,18 +88,30 @@ namespace MCFight
     public class BlazeAbility : IAbilityComponent
     {
         private float _volleyTimer = 0f; private int _shotsFired = 0;
-        private int _shots; private float _shotInterval, _volleyInterval, _shotDamage;
+        private bool _isCasting = false;  // 是否正在施法中（TryExecute成功后才设为true）
+        private int _shots; private float _shotInterval, _volleyInterval, _shotDamage, _attackRange, _engageRange;
         private string _mid;
-        public BlazeAbility(MonsterDefSO def) { _mid = def.monsterId; _shots = MonsterConfigLoader.GetAbilityParamInt(_mid, "shotCount"); _shotInterval = MonsterConfigLoader.GetAbilityParam(_mid, "shotInterval"); _volleyInterval = MonsterConfigLoader.GetAbilityParam(_mid, "volleyInterval"); _shotDamage = MonsterConfigLoader.GetAbilityParam(_mid, "shotDamage"); }
-        public void OnInit(ref UnitState unit) { _volleyTimer = _volleyInterval; }
+        public BlazeAbility(MonsterDefSO def)
+        {
+            _mid = def.monsterId;
+            _shots = MonsterConfigLoader.GetAbilityParamInt(_mid, "shotCount");
+            _shotInterval = MonsterConfigLoader.GetAbilityParam(_mid, "shotInterval");
+            _volleyInterval = MonsterConfigLoader.GetAbilityParam(_mid, "volleyInterval");
+            _shotDamage = MonsterConfigLoader.GetAbilityParam(_mid, "shotDamage");
+            _attackRange = def.attackRange;  // 基础攻击范围（来自monster_config.json的attackRange字段）
+            _engageRange = MonsterConfigLoader.GetAbilityParam(_mid, "engageRange");  // 交战范围（从abilityParams读取）
+        }
+        public void OnInit(ref UnitState unit) { _volleyTimer = _volleyInterval; _isCasting = false; _shotsFired = 0; }
         public bool TryExecute(ref UnitState unit, int targetIdx, float dist, BattleState state, float dt)
         {
             if (targetIdx < 0) return false;
             if (unit.AttackCooldown > 0) return false;
+            if (dist > _attackRange) return false;  // ✅ 添加攻击范围限制
             ref var target = ref state.Units[targetIdx];
             if (!TargetingSystem.CanTargetForAttack(ref unit, ref target, true)) return false;
+            _isCasting = true;  // 标记进入施法状态
             _shotsFired = 0; _volleyTimer = 0;
-            unit.AttackCooldown = _volleyInterval; unit.State = UnitStateEnum.Attack;
+            unit.AttackCooldown = 1f; unit.State = UnitStateEnum.Attack;
             FireShot(ref unit, targetIdx, state); _shotsFired++;
             return true;
         }
@@ -116,12 +128,14 @@ namespace MCFight
         }
         public void TickCast(ref UnitState unit, BattleState state, float dt)
         {
-            if (_shotsFired >= _shots) return;
+            if (!_isCasting || _shotsFired >= _shots) { _isCasting = false; return; }
             _volleyTimer += dt;
             if (_volleyTimer >= _shotInterval) { _volleyTimer = 0; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { FireShot(ref unit, tIdx, state); _shotsFired++; } }
+            // 射击间隙保持小范围移动，避免站着不动
+            MovementSystem.IdleWander(ref unit, dt, state.RNG);
         }
-        public float GetEngageRange(ref UnitState unit) => 200f;
-        public bool IsBusy(ref UnitState unit) => _shotsFired < _shots;
+        public float GetEngageRange(ref UnitState unit) => _engageRange;  // 从配置文件读取
+        public bool IsBusy(ref UnitState unit) => _isCasting && _shotsFired < _shots;
         public bool AllowAntiAir(ref UnitState unit) => true;
     }
 

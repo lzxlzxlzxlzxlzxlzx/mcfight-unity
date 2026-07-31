@@ -511,7 +511,7 @@
       "armorToughness": 0,
       "moveSpeed": 20,
       "attackRange": 160,
-      "attackInterval": 5.0,
+      "attackInterval": 6.0,
       "radius": 16,
       "price": 10
 ,
@@ -519,7 +519,8 @@
         {"key": "shotCount", "value": 3.000000000, "_comment": "连发数量"},
         {"key": "shotInterval", "value": 0.100000000, "_comment": "连发间隔"},
         {"key": "volleyInterval", "value": 5.000000000, "_comment": "齐射间隔"},
-        {"key": "shotDamage", "value": 5.000000000, "_comment": "单发伤害"}
+        {"key": "shotDamage", "value": 3.000000000, "_comment": "单发伤害"},
+        {"key": "engageRange", "value": 200.000000000, "_comment": "交战范围"}
       ]
     },
     {
@@ -666,7 +667,7 @@
     {
       "monsterId": "cataclysm_deepling_warlock",
       "_comment": "渊灵术士",
-      "_ability_comment": "",
+      "_ability_comment": "mark→delay→laser rain",
       "hp": 45,
       "attack": 14,
       "armor": 0,
@@ -675,7 +676,14 @@
       "attackRange": 260,
       "attackInterval": 10.0,
       "radius": 14,
-      "price": 50
+      "price": 50,
+      "markRange": 260,
+      "markDelay": 2.0,
+      "laserTickDamage": 14,
+      "laserTicks": 7,
+      "laserTickInterval": 0.3,
+      "laserRadius": 40,
+      "abilityCooldown": 10.0
 
     },
     {
@@ -761,10 +769,10 @@
         {"key": "chargeDamage", "value": 18.000000000, "_comment": "冲锋伤害"},
         {"key": "chargeRadius", "value": 72.000000000, "_comment": "冲锋范围"},
         {"key": "slashDamage", "value": 14.000000000, "_comment": "斩击伤害"},
-        {"key": "slashRadius", "value": 72.000000000, "_comment": "斩击范围"},
+        {"key": "slashRadius", "value": 100.000000000, "_comment": "斩击范围"},
         {"key": "finishDamage", "value": 18.000000000, "_comment": "终结伤害"},
         {"key": "bigSlashDamage", "value": 14.000000000, "_comment": "大斩伤害"},
-        {"key": "bigSlashRadius", "value": 100.000000000, "_comment": "大斩范围"}
+        {"key": "bigSlashRadius", "value": 300.000000000, "_comment": "大斩范围"}
       ]
     },
     {
@@ -889,7 +897,7 @@
 ,
       "abilityParams": [
         {"key": "sweepDamage", "value": 11.000000000, "_comment": "扇形伤害"},
-        {"key": "sweepRadius", "value": 80.000000000, "_comment": "扇形范围"},
+        {"key": "sweepRadius", "value": 120.000000000, "_comment": "扇形范围"},
         {"key": "tornadoDamage", "value": 15.000000000, "_comment": "龙卷伤害"},
         {"key": "obeliskDamage", "value": 18.000000000, "_comment": "石碑伤害"},
         {"key": "obeliskCooldown", "value": 15.000000000, "_comment": "石碑冷却"}

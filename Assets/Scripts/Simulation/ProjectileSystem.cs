@@ -143,7 +143,7 @@ namespace MCFight
                     ref var u = ref units[i];
                     if (u.State == UnitStateEnum.Dead || u.Team == p.Team) continue;
                     float d = DamageSystem.Dist(p.X, p.Y, u.X, u.Y);
-                    if (d <= p.ExplodeRadius)
+                    if (d <= p.ExplodeRadius + u.Radius)
                         DamageSystem.DealDamage(ref u, p.RawDamage, DamageCategory.Ranged, ref source, units);
                 }
             }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -102,9 +103,19 @@ namespace MCFight
                 buyButton.interactable = canAfford;
                 if (buyText != null) buyText.text = canAfford ? "购买" : "不足";
 
+                // Grey out buy button when can't afford
+                var buyImg = buyButton.GetComponent<Image>();
+                if (buyImg != null)
+                    buyImg.color = canAfford ? Color.white : new Color(0.3f, 0.3f, 0.3f, 1f);
+
                 string id = _def.monsterId;
                 buyButton.onClick.RemoveAllListeners();
-                buyButton.onClick.AddListener(() => _gm.BuyMonster(id, 1));
+                buyButton.onClick.AddListener(() =>
+                {
+                    _gm.BuyMonster(id, 1);
+                    // Card pop animation on successful buy
+                    StartCoroutine(UIAnimator.CardPop(transform));
+                });
             }
 
             // Bulk buy button
@@ -115,10 +126,15 @@ namespace MCFight
                 bulkButton.interactable = maxBatch > 0;
                 if (bulkText != null) bulkText.text = maxBatch > 0 ? $"×{maxBatch}" : "×0";
 
+                // Grey out bulk button when can't afford
+                var bulkImg = bulkButton.GetComponent<Image>();
+                if (bulkImg != null)
+                    bulkImg.color = maxBatch > 0 ? Color.white : new Color(0.3f, 0.3f, 0.3f, 1f);
+
                 string id = _def.monsterId;
                 int max = maxBatch;
                 bulkButton.onClick.RemoveAllListeners();
-                bulkButton.onClick.AddListener(() => { if (max > 0) _gm.BuyMonster(id, max); });
+                bulkButton.onClick.AddListener(() => { if (max > 0) { _gm.BuyMonster(id, max); StartCoroutine(UIAnimator.CardPop(transform)); } });
             }
 
             // Count badge
@@ -133,10 +149,10 @@ namespace MCFight
 
         public static Color GetRarityColor(int price)
         {
-            if (price >= 600) return new Color(0.85f, 0.65f, 0.05f, 1f);  // 金色
-            if (price >= 120) return new Color(0.50f, 0.20f, 0.65f, 1f);  // 紫色
-            if (price >= 50) return new Color(0.75f, 0.40f, 0.05f, 1f);   // 橙色
-            return new Color(0.75f, 0.75f, 0.72f, 1f);                     // 白色
+            if (price >= 600) return new Color(1.0f, 0.80f, 0.15f, 1f);   // 亮金色
+            if (price >= 120) return new Color(0.65f, 0.30f, 0.85f, 1f);   // 亮紫色
+            if (price >= 50) return new Color(0.90f, 0.50f, 0.10f, 1f);    // 亮橙色
+            return new Color(0.85f, 0.85f, 0.80f, 1f);                      // 亮白色
         }
 
         /// <summary>

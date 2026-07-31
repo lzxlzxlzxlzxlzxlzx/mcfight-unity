@@ -159,7 +159,7 @@ namespace MCFight
             float range = Mathf.Max(42f, unit.Radius + target.Radius) + target.Radius * BattleConstants.TARGET_RADIUS_PAD;
             if (dist > range || !TargetingSystem.CanTargetForAttack(ref unit, ref target, false)) return false;
             AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _aoeRadius, state.Units, _aoeDamage, DamageCategory.Melee);
-            for (int i = 0; i < state.Units.Count; i++) { ref var u = ref state.Units[i]; if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue; float d = DamageSystem.Dist(unit.X, unit.Y, u.X, u.Y); if (d <= _aoeRadius + u.Radius * 0.5f) DamageSystem.ApplyKnockback(ref u, _knockbackForce, unit.X, unit.Y); }
+            for (int i = 0; i < state.Units.Count; i++) { ref var u = ref state.Units[i]; if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue; float d = DamageSystem.Dist(unit.X, unit.Y, u.X, u.Y); if (d <= _aoeRadius + u.Radius) DamageSystem.ApplyKnockback(ref u, _knockbackForce, unit.X, unit.Y); }
             state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _aoeRadius));
             unit.AttackCooldown = 0.85f; unit.AttackAnimTimer = BattleConstants.AOE_ANIM_TIME; unit.State = UnitStateEnum.Attack;
             return true;
@@ -198,24 +198,20 @@ namespace MCFight
             if (_tickTimer >= _tickInterval && _ticks < _maxTicks)
             {
                 _tickTimer -= _tickInterval; _ticks++;
-                float facingDir = unit.Facing >= 0 ? 1f : -1f;
-                float vfxRot = unit.Facing >= 0 ? 0f : 180f;
-                string vfxName = _effect == StatusEffectType.Burn ? "firebreath" : "icemist";
-                MCFight.VFXSpriteView.Play(vfxName, unit.X + facingDir * _range * 0.3f, unit.Y, _range, 0.6f, vfxRot, true);
-                for (int i = 0; i < state.Units.Count; i++)
+                int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId);
+                float aimAngleRad = unit.Facing >= 0 ? 0f : Mathf.PI;
+                if (tIdx >= 0)
                 {
-                    ref var u = ref state.Units[i];
-                    if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue;
-                    float d = DamageSystem.Dist(unit.X, unit.Y, u.X, u.Y);
-                    if (d > _range + u.Radius) continue;
-                    float dx = u.X - unit.X, dy = u.Y - unit.Y;
-                    float angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
-                    float facingAngle = unit.Facing >= 0 ? 0f : 180f;
-                    float diff = Mathf.DeltaAngle(angle, facingAngle);
-                    if (Mathf.Abs(diff) > _angleDeg * 0.5f) continue;
-                    DamageSystem.DealDamage(ref u, _dmgPerTick, DamageCategory.Ranged, ref unit, state.Units);
-                    StatusEffectSystem.Apply(ref u, _effect);
+                    ref var target = ref state.Units[tIdx];
+                    aimAngleRad = Mathf.Atan2(target.Y - unit.Y, target.X - unit.X);
                 }
+                float vfxAngle = aimAngleRad * Mathf.Rad2Deg - 90f;
+                float facingDirX = Mathf.Cos(aimAngleRad), facingDirY = Mathf.Sin(aimAngleRad);
+                string vfxName = _effect == StatusEffectType.Burn ? "firebreath" : "icemist";
+                MCFight.VFXSpriteView.Play(vfxName, unit.X + facingDirX * _range * 0.3f, unit.Y + facingDirY * _range * 0.3f, _range, 0.6f, vfxAngle, true);
+                float halfAngleRad = _angleDeg * 0.5f * Mathf.Deg2Rad;
+                AreaEffectSystem.DealSectorAoe(ref unit, unit.X, unit.Y, aimAngleRad, halfAngleRad, _range,
+                    state.Units, _dmgPerTick, DamageCategory.Ranged, new[] { _effect }, false);
             }
             if (_breathTimer <= 0) unit.State = UnitStateEnum.Idle;
         }

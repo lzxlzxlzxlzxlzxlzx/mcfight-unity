@@ -15,7 +15,7 @@ namespace MCFight
         public const float STICKY_RANGE_BONUS = 30f;
         public const float TARGET_RETARGET_INTERVAL = 2.5f;
         public const float FLY_MELEE_VULN_WINDOW = 0.55f;
-        public const float TARGET_RADIUS_PAD = 0.5f;
+        public const float TARGET_RADIUS_PAD = 1.0f;
         public const float ANTI_ARTHROPOD_BIAS = 0.75f;
 
         // 碰撞分离

@@ -167,6 +167,14 @@ namespace MCFight
                     continue;
                 }
 
+                // B.4b 目标失效时清除，强制重选
+                if (unit.TargetId >= 0)
+                {
+                    int curIdx = TargetingSystem.GetTargetIndex(_state.Units, unit.TargetId);
+                    if (curIdx < 0 || _state.Units[curIdx].State == UnitStateEnum.Dead)
+                        unit.TargetId = -1;
+                }
+
                 // B.5 重选目标
                 bool forceRetarget = unit.RetargetTimer <= 0;
                 if (forceRetarget)

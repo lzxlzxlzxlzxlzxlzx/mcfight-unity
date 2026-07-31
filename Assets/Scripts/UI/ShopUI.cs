@@ -21,6 +21,8 @@ namespace MCFight
         private List<MonsterDefSO> _allMonsters;
         private GameManager _gm;
         private ScrollRect _scrollRect;
+        private int _lastGold0 = -1;
+        private int _lastGold1 = -1;
 
         void Start()
         {
@@ -93,11 +95,20 @@ namespace MCFight
 
             if (goldText != null)
             {
-                // Highlight active team with color
                 string blueStr = _gm.ActiveTeam == 0 ? $"<color=#5AAAFF>蓝方: {_gm.Gold[0]}G</color>" : $"<color=#888888>蓝方: {_gm.Gold[0]}G</color>";
                 string redStr = _gm.ActiveTeam == 1 ? $"<color=#FF6655>红方: {_gm.Gold[1]}G</color>" : $"<color=#888888>红方: {_gm.Gold[1]}G</color>";
                 goldText.text = $"  {blueStr}   |   {redStr}  ";
                 goldText.supportRichText = true;
+
+                // Gold bump animation when gold changes
+                if (_lastGold0 >= 0 && _lastGold0 != _gm.Gold[0])
+                {
+                    StopAllCoroutines();
+                    goldText.transform.localScale = Vector3.one;
+                    StartCoroutine(UIAnimator.GoldBump(goldText.transform));
+                }
+                _lastGold0 = _gm.Gold[0];
+                _lastGold1 = _gm.Gold[1];
             }
 
             if (deployButton != null) deployButton.interactable = _gm.CanStartDeploy();

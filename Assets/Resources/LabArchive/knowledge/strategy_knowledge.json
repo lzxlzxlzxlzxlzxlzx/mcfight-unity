@@ -1,0 +1,252 @@
+{
+    "totalSessions": 4,
+    "totalMatches": 41,
+    "units": [
+        {
+            "monster_id": "warden",
+            "display_name": "监守者",
+            "price": 400,
+            "total_wins": 2,
+            "total_losses": 0,
+            "total_draws": 0,
+            "avg_damage": 60.0,
+            "avg_kills": 1.0,
+            "sample_count": 2,
+            "win_rate": 1.0,
+            "power_score": 0.9418328404426575,
+            "role": "Tank"
+        },
+        {
+            "monster_id": "skeleton",
+            "display_name": "骷髅",
+            "price": 8,
+            "total_wins": 2,
+            "total_losses": 0,
+            "total_draws": 0,
+            "avg_damage": 42.0,
+            "avg_kills": 1.0,
+            "sample_count": 2,
+            "win_rate": 1.0,
+            "power_score": 0.9051660895347595,
+            "role": "DPS"
+        },
+        {
+            "monster_id": "creeper",
+            "display_name": "苦力怕",
+            "price": 20,
+            "total_wins": 2,
+            "total_losses": 0,
+            "total_draws": 0,
+            "avg_damage": 0.0,
+            "avg_kills": 0.0,
+            "sample_count": 2,
+            "win_rate": 1.0,
+            "power_score": 0.6000833511352539,
+            "role": "DPS"
+        },
+        {
+            "monster_id": "blaze",
+            "display_name": "烈焰人",
+            "price": 10,
+            "total_wins": 0,
+            "total_losses": 4,
+            "total_draws": 0,
+            "avg_damage": 130.5,
+            "avg_kills": 13.5,
+            "sample_count": 4,
+            "win_rate": 0.0,
+            "power_score": 0.25,
+            "role": "AOE"
+        },
+        {
+            "monster_id": "僵尸",
+            "display_name": "僵尸",
+            "price": 0,
+            "total_wins": 0,
+            "total_losses": 2,
+            "total_draws": 0,
+            "avg_damage": 0.0,
+            "avg_kills": 0.0,
+            "sample_count": 2,
+            "win_rate": 0.0,
+            "power_score": 0.0,
+            "role": "DPS"
+        },
+        {
+            "monster_id": "alexscaves_tremorzilla",
+            "display_name": "撼地斯拉",
+            "price": 1000,
+            "total_wins": 5,
+            "total_losses": 0,
+            "total_draws": 0,
+            "avg_damage": 1764.0,
+            "avg_kills": 25.799999237060548,
+            "sample_count": 5,
+            "win_rate": 1.0,
+            "power_score": 0.9929987192153931,
+            "role": "Assassin"
+        },
+        {
+            "monster_id": "alexscaves_luxtructosaurus",
+            "display_name": "暝煌龙",
+            "price": 800,
+            "total_wins": 0,
+            "total_losses": 5,
+            "total_draws": 0,
+            "avg_damage": 382.5599365234375,
+            "avg_kills": 0.0,
+            "sample_count": 5,
+            "win_rate": 0.0,
+            "power_score": 0.25,
+            "role": "AOE"
+        },
+        {
+            "monster_id": "alexsmobs_centipede_head",
+            "display_name": "洞穴蜈蚣",
+            "price": 30,
+            "total_wins": 10,
+            "total_losses": 5,
+            "total_draws": 0,
+            "avg_damage": 645.3333129882813,
+            "avg_kills": 3.3333332538604738,
+            "sample_count": 15,
+            "win_rate": 0.6666666865348816,
+            "power_score": 0.6876111626625061,
+            "role": "Assassin"
+        },
+        {
+            "monster_id": "iron_golem",
+            "display_name": "铁傀儡",
+            "price": 100,
+            "total_wins": 15,
+            "total_losses": 0,
+            "total_draws": 0,
+            "avg_damage": 0.0,
+            "avg_kills": 0.0,
+            "sample_count": 15,
+            "win_rate": 1.0,
+            "power_score": 0.6000000238418579,
+            "role": "DPS"
+        },
+        {
+            "monster_id": "alexsmobs_bison",
+            "display_name": "野牛",
+            "price": 30,
+            "total_wins": 5,
+            "total_losses": 10,
+            "total_draws": 0,
+            "avg_damage": 461.97314453125,
+            "avg_kills": 1.399999976158142,
+            "sample_count": 15,
+            "win_rate": 0.3333333432674408,
+            "power_score": 0.46791669726371767,
+            "role": "AOE"
+        },
+        {
+            "monster_id": "alexsmobs_tusklin",
+            "display_name": "獠牙兽",
+            "price": 30,
+            "total_wins": 0,
+            "total_losses": 15,
+            "total_draws": 0,
+            "avg_damage": 282.2400207519531,
+            "avg_kills": 0.0,
+            "sample_count": 15,
+            "win_rate": 0.0,
+            "power_score": 0.25,
+            "role": "AOE"
+        }
+    ],
+    "counters": [
+        {
+            "attacker_id": "creeper",
+            "attacker_name": "苦力怕",
+            "target_id": "僵尸",
+            "target_name": "僵尸",
+            "wins": 2,
+            "total": 2,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "skeleton",
+            "attacker_name": "骷髅",
+            "target_id": "blaze",
+            "target_name": "烈焰人",
+            "wins": 2,
+            "total": 2,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "warden",
+            "attacker_name": "监守者",
+            "target_id": "blaze",
+            "target_name": "烈焰人",
+            "wins": 2,
+            "total": 2,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "alexscaves_tremorzilla",
+            "attacker_name": "撼地斯拉",
+            "target_id": "alexscaves_luxtructosaurus",
+            "target_name": "暝煌龙",
+            "wins": 5,
+            "total": 5,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "alexsmobs_bison",
+            "attacker_name": "野牛",
+            "target_id": "alexsmobs_tusklin",
+            "target_name": "獠牙兽",
+            "wins": 5,
+            "total": 5,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "alexsmobs_centipede_head",
+            "attacker_name": "洞穴蜈蚣",
+            "target_id": "alexsmobs_tusklin",
+            "target_name": "獠牙兽",
+            "wins": 5,
+            "total": 5,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "iron_golem",
+            "attacker_name": "铁傀儡",
+            "target_id": "alexsmobs_tusklin",
+            "target_name": "獠牙兽",
+            "wins": 5,
+            "total": 5,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "alexsmobs_centipede_head",
+            "attacker_name": "洞穴蜈蚣",
+            "target_id": "alexsmobs_bison",
+            "target_name": "野牛",
+            "wins": 5,
+            "total": 5,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "iron_golem",
+            "attacker_name": "铁傀儡",
+            "target_id": "alexsmobs_bison",
+            "target_name": "野牛",
+            "wins": 5,
+            "total": 5,
+            "win_rate": 1.0
+        },
+        {
+            "attacker_id": "iron_golem",
+            "attacker_name": "铁傀儡",
+            "target_id": "alexsmobs_centipede_head",
+            "target_name": "洞穴蜈蚣",
+            "wins": 5,
+            "total": 5,
+            "win_rate": 1.0
+        }
+    ]
+}

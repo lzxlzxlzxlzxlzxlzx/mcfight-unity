@@ -1,7 +1,7 @@
 # MC Fight 平衡实验室 — 详细设计文档
 
-> 版本：v0.2  
-> 最后更新：2026-07-22  
+> 版本：v0.3  
+> 最后更新：2026-07-29  
 > 状态：设计稿
 
 ---
@@ -353,12 +353,14 @@ public class UnitFilterCriteria
 
 ### 7.2 规划阶段 — LLM 生成 TestPlan
 
+> **输出格式**：LLM 输出的 TestPlan 经后处理（见 7.3 节）后，最终转换为标准的 `.balancetest.json` 文件（格式规格见 [7.4 节](#74-测试计划-json-文件格式规格)），该文件可直接导入游戏进行自动测试。
+
 #### LLM Prompt 结构
 
 ```
 [System]
 你是 MC Fight 平衡实验室的测试规划 AI…
-（系统规则、输出 JSON Schema）
+（系统规则、输出 JSON Schema 详见 BalanceLabTestPlan/v1 规范）
 
 [Research Context]
 ## 用户需求
@@ -378,9 +380,10 @@ public class UnitFilterCriteria
 ## 约束
 - 最大场次: 200
 - 金币预算: 1000
+- 输出格式：符合 BalanceLabTestPlan/v1 JSON Schema (每项测试含 id, label, team_red, team_blue, repeat_count 等字段)
 
 [Task]
-根据以上信息，生成结构化测试计划 JSON。
+根据以上信息，生成结构化测试计划 JSON。输出 JSON 必须符合 BalanceLabTestPlan/v1 格式规范，可直接导入游戏。包含 version, generated_at, generated_by, metadata, tests 等顶层字段。
 要求：
 1. 分阶段（Phase），每阶段有明确目标
 2. 每个 TestCase 必须指定双方阵容（具体 monsterId + count）
@@ -526,7 +529,242 @@ LLM 输出后，本地必须执行：
 | **Cap** | 若 totalMatches > max，按优先级裁剪并通知用户 |
 | **Deduplicate** | 去除重复 case |
 
+### 7.4 测试计划 JSON 文件格式规格
+
+LLM 生成的测试计划最终以独立 `.json` 文件保存，该文件可直接导入游戏进行自动测试。
+
+#### 7.4.1 文件约定
+
+| 项目 | 规则 |
+|------|------|
+| **文件扩展名** | `.balancetest.json` |
+| **存放目录** | `Assets/Resources/BalanceLab/Tests/` |
+| **编码** | UTF-8 (无 BOM) |
+| **换行** | LF (`\n`) |
+| **缩进** | 2 空格 |
+| **文件名** | `{项目简述}_{日期}.balancetest.json`，如 `20g_melee_matrix_2026-07-29.balancetest.json` |
+
+#### 7.4.2 JSON Schema
+
+```json
+{
+  "$schema": "BalanceLabTestPlan/v1",
+  "version": "1.0",
+  "generated_at": "2026-07-29T14:00:00Z",
+  "generated_by": "LLM:claude-4.5 (prompt: 20G近战强度评估)",
+  "metadata": {
+    "title": "测试计划名称",
+    "description": "人类可读的描述",
+    "estimated_duration_minutes": 28,
+    "total_matches": 85
+  },
+  "tests": [
+    {
+      "id": "unique_test_id",
+      "label": "简短标签（用于UI显示）",
+      "category": "1v1 | mirror | team | phase",
+      "description": "测试目的描述",
+      "deploy_strategy": "StandardSpread",
+
+      "team_red": {
+        "monsters": [
+          { "monster_id": "creeper", "count": 2 },
+          { "monster_id": "zombie",  "count": 1 }
+        ]
+      },
+      "team_blue": {
+        "monsters": [
+          { "monster_id": "blaze", "count": 1 }
+        ]
+      },
+
+      "repeat_count": 5,
+      "matches_per_repeat": 1,
+      "battle_mode": "AutoPlay",
+      "terrain": "DefaultFlat",
+      "enable_recording": true,
+
+      "success_criteria": {
+        "team": "blue",
+        "type": "win_rate",
+        "min": 0.5,
+        "max": 0.8
+      },
+
+      "tags": ["melee", "20g", "baseline"],
+      "priority": 1
+    }
+  ]
+}
+```
+
+#### 7.4.3 字段定义
+
+**顶层字段**：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `version` | string | ✅ | 固定 `"1.0"` |
+| `generated_at` | string(ISO8601) | ✅ | 生成时间 |
+| `generated_by` | string | ✅ | 生成来源标识 |
+| `metadata.title` | string | ✅ | 计划名称 |
+| `metadata.description` | string | 否 | 计划描述 |
+| `metadata.estimated_duration_minutes` | number | 否 | 预计总耗时（分钟） |
+| `metadata.total_matches` | number | 否 | 预计总对局数 |
+| `tests` | array | ✅ | 测试项目列表，至少 1 项 |
+
+**测试项目字段 (`tests[]`)**：
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `id` | string | ✅ | - | 唯一标识，如 `"creeper_vs_blaze_001"` |
+| `label` | string | ✅ | - | UI 显示的简短名称 |
+| `category` | string | 否 | `"wildcard"` | 分类：`1v1`, `mirror`, `team`, `phase` 等 |
+| `description` | string | 否 | `""` | 测试目的说明 |
+| `deploy_strategy` | string | 否 | `"StandardSpread"` | 部署策略名 |
+| `team_red.monsters` | array | ✅ | - | 红方单位列表 |
+| `team_blue.monsters` | array | ✅ | - | 蓝方单位列表 |
+| `repeat_count` | number | ✅ | - | 每场重复次数（≥1） |
+| `matches_per_repeat` | number | 否 | `1` | 每次重复中的对局数（用于位交换等） |
+| `battle_mode` | string | 否 | `"AutoPlay"` | 战斗模式 |
+| `terrain` | string | 否 | `"DefaultFlat"` | 地形选择 |
+| `enable_recording` | boolean | 否 | `true` | 是否录制回放 |
+| `success_criteria` | object | 否 | 见下方 | 胜负判定条件 |
+| `tags` | string[] | 否 | `[]` | 标签列表 |
+| `priority` | number | 否 | `1` | 优先级（1~5，1 最高） |
+
+**单位定义 (`monsters[]`)**：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `monster_id` | string | ✅ | 怪物 ID，如 `"creeper"`, `"blaze"` |
+| `count` | number | ✅ | 数量（≥1） |
+
+**胜负判定条件 (`success_criteria`)**：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `team` | string | ✅ | 判定方：`"red"`, `"blue"`, `"either"` |
+| `type` | string | ✅ | 判定类型：`"win_rate"`, `"rounds_won"`, `"avg_damage"` |
+| `min` | number | 否 | 最小阈值（闭区间） |
+| `max` | number | 否 | 最大阈值（闭区间） |
+
+#### 7.4.4 完整示例
+
+```json
+{
+  "$schema": "BalanceLabTestPlan/v1",
+  "version": "1.0",
+  "generated_at": "2026-07-29T14:00:00Z",
+  "generated_by": "LLM:claude-4.5 (prompt: 20G近战强度评估)",
+  "metadata": {
+    "title": "20G 近战 1v1 强度评估",
+    "description": "评估所有 20G 价位近战单位之间的 1v1 对战强度，建立基线排名",
+    "estimated_duration_minutes": 25,
+    "total_matches": 120
+  },
+  "tests": [
+    {
+      "id": "phase1_creeper_vs_zombie",
+      "label": "苦力怕 vs 僵尸",
+      "category": "1v1",
+      "description": "爆炸 vs 近战耐久",
+      "deploy_strategy": "StandardSpread",
+      "team_red": {
+        "monsters": [{ "monster_id": "creeper", "count": 1 }]
+      },
+      "team_blue": {
+        "monsters": [{ "monster_id": "zombie", "count": 1 }]
+      },
+      "repeat_count": 10,
+      "battle_mode": "AutoPlay",
+      "terrain": "DefaultFlat",
+      "enable_recording": true,
+      "success_criteria": {
+        "team": "blue",
+        "type": "win_rate",
+        "min": 0.3,
+        "max": 0.7
+      },
+      "tags": ["melee", "20g", "baseline"],
+      "priority": 1
+    },
+    {
+      "id": "phase2_creeper_squad",
+      "label": "苦力怕小队 vs 烈焰人",
+      "category": "team",
+      "description": "3 苦力怕 vs 1 烈焰人，测试多对少场景",
+      "deploy_strategy": "StandardSpread",
+      "team_red": {
+        "monsters": [{ "monster_id": "creeper", "count": 3 }]
+      },
+      "team_blue": {
+        "monsters": [{ "monster_id": "blaze", "count": 1 }]
+      },
+      "repeat_count": 10,
+      "battle_mode": "AutoPlay",
+      "terrain": "DefaultFlat",
+      "enable_recording": true,
+      "tags": ["multi", "20g", "cross-phase"],
+      "priority": 2
+    }
+  ]
+}
+```
+
+#### 7.4.5 导入与校准流程
+
+```
+1. 用户将 .balancetest.json 文件放入 Tests/ 目录
+       ↓
+2. 进入 BalanceLab → 点击"导入测试计划"
+       ↓
+3. 系统解析 JSON，校验：
+   · 所有 monster_id 在数据库中存在
+   · repeat_count ≥ 1
+   · count ≥ 1
+   · 每个测试项目 ID 唯一
+       ↓
+4. 显示校验结果 + 预览（同步骤3的预览UI）
+       ↓
+5. 用户确认后 → 加入执行队列 → 自动运行
+       ↓
+6. 完成后生成结果报告
+```
+
+#### 7.4.6 校验规则
+
+| 规则 | 错误级别 | 处理 |
+|------|----------|------|
+| `monster_id` 不存在 | ❌ Error | 拒绝导入，提示缺失的 ID |
+| `repeat_count` < 1 | ❌ Error | 拒绝导入 |
+| `count` < 1 | ❌ Error | 拒绝导入 |
+| `team_red.monsters` 或 `team_blue.monsters` 为空 | ❌ Error | 拒绝导入 |
+| 测试 ID 重复 | ⚠️ Warning | 自动去重 + 警告 |
+| `version` 不支持 | ⚠️ Warning | 尝试兼容解析 + 警告 |
+| `success_criteria` 阈值不合理 (min > max) | ⚠️ Warning | 使用默认值 + 警告 |
+| `terrain` 未知 | ℹ️ Info | 回退到 DefaultFlat |
+
+#### 7.4.7 与 LLM TestPlan 的映射
+
+LLM 输出的语义化 TestPlan（见 7.2 节）在本地后处理时转换为此 JSON 格式：
+
+| LLM TestPlan 字段 | → | JSON 文件字段 |
+|---|---|---|
+| `case.case_id` | → | `tests[i].id` |
+| `case.label` | → | `tests[i].label` |
+| `case.description` | → | `tests[i].description` |
+| `case.team0.units` | → | `tests[i].team_red.monsters` |
+| `case.team1.units` | → | `tests[i].team_blue.monsters` |
+| `case.repeat_count` | → | `tests[i].repeat_count` |
+| `phase.phase_id` | → | `tests[i].phase_id` (保存到 tags) |
+| `plan.plan_id + plan.name` | → | `metadata.title` / `generated_by` |
+| `plan.strategy.budget` | → | `metadata` 扩展字段 `budget` |
+
+`__DYNAMIC:` 占位符在 **运行时** 由前序 phase 的测试结果代入后解析为具体 monster_id。
+
 ---
+
 
 ## 8. 步骤 3：计划预览与用户编辑
 
@@ -1450,3 +1688,13 @@ sessions/session_20260722_153000/
 | `Assets/Scripts/Data/MonsterDatabase.cs` | 怪物数据库 |
 | `Assets/Resources/monster_config.json` | 怪物数值配置 |
 | `Assets/Scenes/BattleScene.unity` | 主战斗场景 |
+
+---
+
+## 修订记录
+
+| 版本 | 日期 | 变更内容 |
+|------|------|---------|
+| v0.1 | 2026-07-21 | 初始设计稿 |
+| v0.2 | 2026-07-22 | 完善 LLM 规划流程、TestPlan 数据结构、UI 设计、分期计划 |
+| **v0.3** | **2026-07-29** | **新增 §7.4「测试计划 JSON 文件格式规格」：固定 JSON Schema (BalanceLabTestPlan/v1)，定义文件命名、字段、校验规则、导入流程；更新 §7.2 LLM Prompt 引用新格式；更新 §7.3 后处理映射表** |

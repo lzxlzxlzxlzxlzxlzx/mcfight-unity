@@ -1,0 +1,44 @@
+{
+  "schema": "BalanceLabTestPlan/v1",
+  "version": "1.0",
+  "generated_at": "2026-07-29T14:00:00Z",
+  "generated_by": "manual",
+  "metadata": {
+    "title": "P2 示例：基础1v1测试",
+    "description": "3场基础1v1测试，验证导入流程",
+    "estimated_duration_minutes": 2,
+    "total_matches": 3
+  },
+  "tests": [
+    {
+      "id": "sample_1",
+      "label": "苦力怕 vs 骷髅",
+      "category": "1v1",
+      "deploy_strategy": "StandardSpread",
+      "team_red": { "monsters": [{ "monster_id": "creeper", "count": 1 }] },
+      "team_blue": { "monsters": [{ "monster_id": "skeleton", "count": 1 }] },
+      "repeat_count": 1,
+      "priority": 1
+    },
+    {
+      "id": "sample_2",
+      "label": "烈焰人 vs 僵尸",
+      "category": "1v1",
+      "deploy_strategy": "StandardSpread",
+      "team_red": { "monsters": [{ "monster_id": "blaze", "count": 1 }] },
+      "team_blue": { "monsters": [{ "monster_id": "zombie", "count": 1 }] },
+      "repeat_count": 1,
+      "priority": 1
+    },
+    {
+      "id": "sample_3",
+      "label": "监守者 vs 烈焰人",
+      "category": "1v1",
+      "deploy_strategy": "StandardSpread",
+      "team_red": { "monsters": [{ "monster_id": "warden", "count": 1 }] },
+      "team_blue": { "monsters": [{ "monster_id": "blaze", "count": 1 }] },
+      "repeat_count": 1,
+      "priority": 1
+    }
+  ]
+}

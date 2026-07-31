@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-07-29T00:00:00Z",
+  "generated_by": "manual",
+  "metadata": {
+    "title": "P1示例测试计划",
+    "description": "验证测试计划系统的基本流程",
+    "estimated_duration_minutes": 5,
+    "total_matches": 5
+  },
+  "tests": [
+    {
+      "id": "case_1",
+      "label": "苦力怕 vs 骷髅",
+      "category": "1v1",
+      "description": "自爆 vs 远程",
+      "deploy_strategy": "StandardSpread",
+      "team_blue": {
+        "monsters": [{ "monster_id": "creeper", "count": 1 }]
+      },
+      "team_red": {
+        "monsters": [{ "monster_id": "skeleton", "count": 1 }]
+      },
+      "repeat_count": 2
+    },
+    {
+      "id": "case_2",
+      "label": "苦力怕×3 vs 烈焰人",
+      "category": "team",
+      "description": "多打少测试",
+      "deploy_strategy": "StandardSpread",
+      "team_blue": {
+        "monsters": [{ "monster_id": "creeper", "count": 3 }]
+      },
+      "team_red": {
+        "monsters": [{ "monster_id": "blaze", "count": 1 }]
+      },
+      "repeat_count": 3
+    }
+  ]
+}

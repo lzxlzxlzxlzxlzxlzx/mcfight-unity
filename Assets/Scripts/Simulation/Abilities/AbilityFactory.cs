@@ -57,6 +57,7 @@ namespace MCFight
                 case "RemnantAbility": return new RemnantAbility(def);
                 case "HarbingerAbility": return new HarbingerAbility(def);
                 case "NagaAbility": return new NagaAbility(def);
+                case "WarlockAbility": return new WarlockAbility(def);
 
                 default:
                     Debug.LogWarning($"[AbilityFactory] Unknown ability type: {typeName}");

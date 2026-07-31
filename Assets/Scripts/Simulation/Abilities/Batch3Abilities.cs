@@ -65,11 +65,12 @@ namespace MCFight
         {
             if (targetIdx < 0) return false;
             if (unit.AttackCooldown > 0) return false;
+            if (_leapTimer > 0) return false;
             ref var target = ref state.Units[targetIdx];
-            if (dist > _leapMaxRange + target.Radius * 0.35f) return false;
             if (!TargetingSystem.CanTargetForAttack(ref unit, ref target, false)) return false;
+            if (dist > _leapMaxRange + target.Radius * BattleConstants.TARGET_RADIUS_PAD) return false;
             _leapTimer = _leapDuration; _fromX = unit.X; _fromY = unit.Y; _toX = target.X; _toY = target.Y;
-            unit.SkillState.SetFloat(SkillKeys.CastTimeLeft, _leapDuration); unit.AttackCooldown = 3f; unit.State = UnitStateEnum.Attack;
+            unit.State = UnitStateEnum.Attack;
             return true;
         }
         public void TickCast(ref UnitState unit, BattleState state, float dt)
@@ -77,7 +78,7 @@ namespace MCFight
             if (_leapTimer <= 0) return;
             _leapTimer -= dt; float t = 1f - _leapTimer / _leapDuration;
             MovementSystem.SetLeapArcPosition(ref unit, _fromX, _fromY, _toX, _toY, t, 42f);
-            if (_leapTimer <= 0) { AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _leapRadius, state.Units, _leapDmg, DamageCategory.Melee); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _leapRadius, 0.42f)); unit.SkillState.SetFloat(SkillKeys.CastTimeLeft, 0); }
+            if (_leapTimer <= 0) { AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _leapRadius, state.Units, _leapDmg, DamageCategory.Melee); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _leapRadius, 0.42f)); VFXSpriteView.Play("closeaoe", unit.X, unit.Y, _leapRadius * 2f, 0.5f); unit.AttackCooldown = 2f; unit.State = UnitStateEnum.Idle; }
         }
         public float GetEngageRange(ref UnitState unit) => _leapMaxRange;
         public bool IsBusy(ref UnitState unit) => _leapTimer > 0;
@@ -124,7 +125,7 @@ namespace MCFight
             int choice = _skillIdx % 3; float dmg = _baseDamage + (float)state.RNG.NextDouble() * 6f;
             if (choice == 0 && dist <= Mathf.Max(42f, unit.Radius + target.Radius) + target.Radius * BattleConstants.TARGET_RADIUS_PAD) { if (!TargetingSystem.CanTargetForAttack(ref unit, ref target, false)) return false; DamageSystem.DealDamage(ref target, dmg, DamageCategory.Melee, ref unit, state.Units); }
             else if (choice == 1 && dist <= _aoeRadius + target.Radius * BattleConstants.TARGET_RADIUS_PAD) { if (!TargetingSystem.CanTargetForAttack(ref unit, ref target, false)) return false; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _aoeRadius, state.Units, dmg, DamageCategory.Melee, null, true); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _aoeRadius, 0.42f)); }
-            else if (dist <= 240f + target.Radius * BattleConstants.TARGET_RADIUS_PAD) { AreaEffectSystem.DealInstantAoe(ref unit, target.X, target.Y, _rangedRadius, state.Units, dmg, DamageCategory.Ranged, null, false); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, target.X, target.Y, _rangedRadius, 0.35f)); }
+            else if (dist <= 240f + target.Radius * BattleConstants.TARGET_RADIUS_PAD) { float aimAngle = Mathf.Atan2(target.Y - unit.Y, target.X - unit.X); float dirX = Mathf.Cos(aimAngle), dirY = Mathf.Sin(aimAngle); AreaEffectSystem.DealCompositeAoe(ref unit, unit.X, unit.Y, dirX, dirY, 240f, 12f, 48f, state.Units, dmg, DamageCategory.Ranged, null, false); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, target.X, target.Y, _rangedRadius, 0.35f)); }
             else return false;
             _skillIdx++; unit.AttackCooldown = 2f; _lockTimer = 1f; unit.State = UnitStateEnum.Attack;
             return true;
@@ -193,7 +194,7 @@ namespace MCFight
             _castTimer -= dt; _tickTimer += dt;
             switch (_pendingSkill) {
                 case 0: if (_tickTimer >= _spinTickInterval && _ticksDone < _spinTicks) { _tickTimer -= _spinTickInterval; _ticksDone++; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _spinRadius, state.Units, _spinDamage, DamageCategory.Melee, null, true); } break;
-                case 1: if (_tickTimer >= _sonicTickInterval && _ticksDone < _sonicTicks) { _tickTimer -= _sonicTickInterval; _ticksDone++; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _sonicRadius, state.Units, _sonicDamage, DamageCategory.Ranged, new[] { StatusEffectType.Burn }, false); } break;
+                case 1: if (_tickTimer >= _sonicTickInterval && _ticksDone < _sonicTicks) { _tickTimer -= _sonicTickInterval; _ticksDone++; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _sonicRadius, state.Units, _sonicDamage, DamageCategory.Ranged, new[] { StatusEffectType.Burn }, false); MCFight.VFXSpriteView.Play("soundwave", unit.X, unit.Y, _sonicRadius * 2f, 0.5f); } break;
                 case 2: if (_tickTimer >= _sonicTickInterval && _ticksDone < _sonicTicks) { _tickTimer -= _sonicTickInterval; _ticksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); var proj = ProjectileSystem.CreateDefault(state.NextId(), unit.Team, unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, unit.Id, unit.MonsterId, _projDamage, _projRange); proj.Kind = ProjectileKind.RevenantBone; proj.Speed = 300f; state.Projectiles.Add(proj); } } break;
             }
             if (_castTimer <= 0) { unit.SkillState.SetBool(SkillKeys.RevenantDefending, true); unit.AttackCooldown = 1f; _pendingSkill = -1; }
@@ -339,22 +340,58 @@ namespace MCFight
             if (_castTimer > 0 || unit.AttackCooldown > 0) return false;
             if (targetIdx < 0) return false;
             ref var target = ref state.Units[targetIdx];
-            if (_obeliskCd <= 0 && dist <= 240f + target.Radius * BattleConstants.TARGET_RADIUS_PAD) { _pendingSkill = 2; _castTimer = 3f; _obeliskCd = _obeliskCooldown; unit.State = UnitStateEnum.Attack; return true; }
-            if (target.MoveType == MoveType.Fly) return false;
-            if (dist > 240f + target.Radius * BattleConstants.TARGET_RADIUS_PAD) return false;
-            _pendingSkill = _useTornado ? 1 : 0; _castTimer = 3f; _useTornado = !_useTornado; unit.State = UnitStateEnum.Attack;
-            return true;
+            if (!TargetingSystem.CanTargetForAttack(ref unit, ref target, true)) return false;
+
+            float pad = target.Radius * BattleConstants.TARGET_RADIUS_PAD;
+            float obeliskRange = 290f + pad; // maxR(240) + hitRadius(50)
+            float meleeRange = _sweepRadius + pad;
+            bool isFly = target.MoveType == MoveType.Fly;
+
+            // 优先：石碑（冷却好且敌人在命中范围内，对地对空均可）
+            if (_obeliskCd <= 0 && dist <= obeliskRange)
+            {
+                _pendingSkill = 2; _castTimer = 3f; _obeliskCd = _obeliskCooldown;
+                _sweepHitTimer = -1;
+                unit.State = UnitStateEnum.Attack;
+                return true;
+            }
+
+            // 石碑冷却中：地面敌人交替二连斩/龙卷，空军只用龙卷
+            if (isFly)
+            {
+                // 空军：龙卷（投射物，射程 240）
+                if (dist <= unit.AttackRange + pad)
+                {
+                    _pendingSkill = 1; _castTimer = 3f; _sweepHitTimer = -1;
+                    unit.State = UnitStateEnum.Attack;
+                    return true;
+                }
+            }
+            else
+            {
+                // 地面：近战范围交替二连斩/龙卷
+                if (dist <= meleeRange)
+                {
+                    _pendingSkill = _useTornado ? 1 : 0;
+                    _useTornado = !_useTornado;
+                    _castTimer = 3f; _sweepHitTimer = -1;
+                    unit.State = UnitStateEnum.Attack;
+                    return true;
+                }
+            }
+
+            return false;
         }
         public void TickCast(ref UnitState unit, BattleState state, float dt)
         {
             if (_castTimer <= 0) return;
             float elapsed = 3f - _castTimer; _castTimer -= dt;
-            if (_pendingSkill == 0) { if (elapsed < 0.1f && _sweepHitTimer < 0) { _sweepHitTimer = 0.1f; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _sweepRadius, state.Units, _sweepDamage, DamageCategory.Melee, null, true); int tIdx0 = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx0 >= 0) { ref var t0 = ref state.Units[tIdx0]; float dx0 = t0.X - unit.X, dy0 = t0.Y - unit.Y; float d0 = Mathf.Sqrt(dx0 * dx0 + dy0 * dy0); MCFight.SlashView.Play(unit.X, unit.Y, d0 > 0.01f ? dx0 / d0 : 1f, d0 > 0.01f ? dy0 / d0 : 0f, 80f, 0.5f); } } if (elapsed >= 1.5f && _sweepHitTimer > 0) { _sweepHitTimer = -1; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _sweepRadius, state.Units, _sweepDamage, DamageCategory.Melee, null, true); int tIdx1 = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx1 >= 0) { ref var t1 = ref state.Units[tIdx1]; float dx1 = t1.X - unit.X, dy1 = t1.Y - unit.Y; float d1 = Mathf.Sqrt(dx1 * dx1 + dy1 * dy1); MCFight.SlashView.Play(unit.X, unit.Y, d1 > 0.01f ? dx1 / d1 : 1f, d1 > 0.01f ? dy1 / d1 : 0f, 80f, 0.5f); } } }
-            if (_pendingSkill == 1 && elapsed >= 1.5f && _sweepHitTimer >= 0) { _sweepHitTimer = -1; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); var proj = ProjectileSystem.CreateDefault(state.NextId(), unit.Team, unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, unit.Id, unit.MonsterId, _tornadoDamage, 9999f); proj.Kind = ProjectileKind.ForsakenSonic; proj.PierceHalfWidth = 34f; proj.HitEnemyIds = new List<int>(); proj.Speed = 210f; proj.MaxTravel = 0; state.Projectiles.Add(proj); } }
-            if (_pendingSkill == 2 && elapsed >= 1.5f && _sweepHitTimer >= 0) { _sweepHitTimer = -1; int rings = 5; float maxR = 104f; var hitIds = new List<int>(); for (int r = 0; r < rings; r++) { float radius = r * (maxR / (rings - 1)); int count = Mathf.Max(1, r * 2 + 1); for (int a = 0; a < count; a++) { float angle = (a * Mathf.PI * 2f / count) + r * 0.3f; float ox = unit.X + Mathf.Cos(angle) * radius; float oy = unit.Y + Mathf.Sin(angle) * radius; for (int i = 0; i < state.Units.Count; i++) { ref var u = ref state.Units[i]; if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue; if (hitIds.Contains(u.Id)) continue; float d = DamageSystem.Dist(ox, oy, u.X, u.Y); if (d <= 22f + u.Radius) { DamageSystem.DealDamage(ref u, _obeliskDamage, DamageCategory.Melee, ref unit, state.Units); hitIds.Add(u.Id); } } } } }
+            if (_pendingSkill == 0) { if (elapsed < 0.1f && _sweepHitTimer < 0) { _sweepHitTimer = 0.1f; int tIdx0 = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx0 >= 0) { ref var t0 = ref state.Units[tIdx0]; float aim0 = Mathf.Atan2(t0.Y - unit.Y, t0.X - unit.X); AreaEffectSystem.DealSectorAoe(ref unit, unit.X, unit.Y, aim0, 45f * Mathf.Deg2Rad, _sweepRadius, state.Units, _sweepDamage, DamageCategory.Melee, null, true); float dx0 = t0.X - unit.X, dy0 = t0.Y - unit.Y; float d0 = Mathf.Sqrt(dx0 * dx0 + dy0 * dy0); MCFight.SlashView.Play(unit.X, unit.Y, d0 > 0.01f ? dx0 / d0 : 1f, d0 > 0.01f ? dy0 / d0 : 0f, 72f, 0.4f); } } if (elapsed >= 1.5f && _sweepHitTimer > 0) { _sweepHitTimer = -1; int tIdx1 = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx1 >= 0) { ref var t1 = ref state.Units[tIdx1]; float aim1 = Mathf.Atan2(t1.Y - unit.Y, t1.X - unit.X); AreaEffectSystem.DealSectorAoe(ref unit, unit.X, unit.Y, aim1, 45f * Mathf.Deg2Rad, _sweepRadius, state.Units, _sweepDamage, DamageCategory.Melee, null, true); float dx1 = t1.X - unit.X, dy1 = t1.Y - unit.Y; float d1 = Mathf.Sqrt(dx1 * dx1 + dy1 * dy1); MCFight.SlashView.Play(unit.X, unit.Y, d1 > 0.01f ? dx1 / d1 : 1f, d1 > 0.01f ? dy1 / d1 : 0f, 72f, 0.4f); } } }
+            if (_pendingSkill == 1 && elapsed >= 1.5f && _sweepHitTimer < 0) { _sweepHitTimer = 0; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); var proj = ProjectileSystem.CreateDefault(state.NextId(), unit.Team, unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, unit.Id, unit.MonsterId, _tornadoDamage, 9999f); proj.Kind = ProjectileKind.ForsakenSonic; proj.PierceHalfWidth = 34f; proj.HitEnemyIds = new List<int>(); proj.Speed = 210f; proj.MaxTravel = 0; state.Projectiles.Add(proj); } }
+            if (_pendingSkill == 2 && elapsed >= 1.5f && _sweepHitTimer < 0) { _sweepHitTimer = 0; int rings = 5; float maxR = 240f; var hitIds = new List<int>(); for (int r = 0; r < rings; r++) { float radius = r * (maxR / (rings - 1)); int count = Mathf.Max(1, r * 2 + 1); for (int a = 0; a < count; a++) { float angle = (a * Mathf.PI * 2f / count) + r * 0.3f; float ox = unit.X + Mathf.Cos(angle) * radius; float oy = unit.Y + Mathf.Sin(angle) * radius; MCFight.VFXSpriteView.Play("obelisk", ox, oy, 100f, 0.8f); for (int i = 0; i < state.Units.Count; i++) { ref var u = ref state.Units[i]; if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue; if (hitIds.Contains(u.Id)) continue; float d = DamageSystem.Dist(ox, oy, u.X, u.Y); if (d <= 50f + u.Radius) { DamageSystem.DealDamage(ref u, _obeliskDamage, DamageCategory.Melee, ref unit, state.Units); hitIds.Add(u.Id); } } } } }
             if (_castTimer <= 0) { _pendingSkill = -1; _sweepHitTimer = 0; unit.AttackCooldown = 0.5f; }
         }
-        public float GetEngageRange(ref UnitState unit) => 240f;
+        public float GetEngageRange(ref UnitState unit) => 290f;
         public bool IsBusy(ref UnitState unit) => _castTimer > 0;
         public bool AllowAntiAir(ref UnitState unit) => true;
     }
@@ -391,7 +428,7 @@ namespace MCFight
         public void TickCast(ref UnitState unit, BattleState state, float dt)
         {
             if (_castTimer <= 0) return; _castTimer -= dt; _tickTimer += dt;
-            if (_pendingSkill == 1) { if (_tickTimer >= 0.2f && _ticksDone < 10) { _tickTimer -= 0.2f; _ticksDone++; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _frostRadius, state.Units, _frostDamage, DamageCategory.Ranged, new[] { StatusEffectType.Slow }, false); if (_ticksDone == 1) MCFight.VFXSpriteView.Play("icemist", unit.X, unit.Y, 140f, 2f); } }
+            if (_pendingSkill == 1) { if (_tickTimer >= 0.2f && _ticksDone < 10) { _tickTimer -= 0.2f; _ticksDone++; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _frostRadius, state.Units, _frostDamage, DamageCategory.Ranged, new[] { StatusEffectType.Slow }, false); if (_ticksDone == 1) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); float targetAngle = 0f; if (tIdx >= 0) { ref var target = ref state.Units[tIdx]; float dx = target.X - unit.X, dy = target.Y - unit.Y;                     targetAngle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg - 90f; } MCFight.VFXSpriteView.Play("icemist", unit.X, unit.Y, 140f, 2f, targetAngle); } } }
             if (_pendingSkill == 3 && _castTimer <= 0) { AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _slamRadius, state.Units, _slamDamage, DamageCategory.Melee, null, true); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _slamRadius, 0.5f)); VFXSpriteView.Play("closeaoe", unit.X, unit.Y, 180f, 1f); }
             if (_castTimer <= 0) { _pendingSkill = -1; unit.AttackCooldown = 0.5f; }
         }
@@ -462,7 +499,7 @@ namespace MCFight
             if (_pendingSkill == 0) { if (_ticksDone == 0 && _tickTimer >= 0.5f) { _ticksDone++; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _sweepRadius, state.Units, _sweepDamage, DamageCategory.Melee, null, true); } }
             if (_pendingSkill == 1) { if (_tickTimer >= 0.5f && _ticksDone < 4) { _tickTimer -= 0.5f; _ticksDone++; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _spinRadius, state.Units, _spinDamage, DamageCategory.Melee, null, true); } }
             if (_pendingSkill == 2) { if (_ticksDone == 0) { _ticksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; for (int i = 0; i < 3; i++) { float angle = Mathf.Atan2(t.Y - unit.Y, t.X - unit.X) + (i - 1) * 0.8f; var proj = ProjectileSystem.CreateDefault(state.NextId(), unit.Team, unit.X, unit.Y, Mathf.Cos(angle), Mathf.Sin(angle), unit.Id, unit.MonsterId, _missileDamage, 9999f, new[] { StatusEffectType.Wither }); proj.Kind = ProjectileKind.ProwlerMissile; proj.TargetId = t.Id; proj.ExplodeRadius = 24f; proj.Speed = 250f; proj.HomingSteer = 4.5f * dt; proj.MaxTravel = 0; state.Projectiles.Add(proj); } } } }
-            if (_pendingSkill == 3) { for (int i = 0; i < state.ActiveBeams.Count; i++) { if (state.ActiveBeams[i].Id == _beamVisualId) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); var beam = state.ActiveBeams[i]; beam.OriginX = unit.X; beam.OriginY = unit.Y; beam.DirX = d > 0.01f ? dx / d : 1f; beam.DirY = d > 0.01f ? dy / d : 0f; beam.Length = _beamLength; beam.Remaining = _castTimer; state.ActiveBeams[i] = beam; } break; } } if (_tickTimer >= 0.375f && _ticksDone < 4) { _tickTimer -= 0.375f; _ticksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dmg = _beamDamage + t.MaxHp * _beamDamagePct; AreaEffectSystem.DealInstantAoe(ref unit, t.X, t.Y, 20f, state.Units, dmg, DamageCategory.Beam, null, false); } } }
+            if (_pendingSkill == 3) { for (int i = 0; i < state.ActiveBeams.Count; i++) { if (state.ActiveBeams[i].Id == _beamVisualId) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); var beam = state.ActiveBeams[i]; beam.OriginX = unit.X; beam.OriginY = unit.Y; beam.DirX = d > 0.01f ? dx / d : 1f; beam.DirY = d > 0.01f ? dy / d : 0f; beam.Length = _beamLength; beam.Remaining = _castTimer; state.ActiveBeams[i] = beam; } break; } } if (_tickTimer >= 0.375f && _ticksDone < 4) { _tickTimer -= 0.375f; _ticksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); float dirX = d > 0.01f ? dx / d : 1f, dirY = d > 0.01f ? dy / d : 0f; float dmg = _beamDamage + t.MaxHp * _beamDamagePct; AreaEffectSystem.DealBeamAoe(ref unit, unit.X, unit.Y, dirX, dirY, d, _beamHalfWidth, state.Units, dmg, DamageCategory.Beam, null, false); } } }
             if (_castTimer <= 0) { if (_pendingSkill == 3) { for (int i = state.ActiveBeams.Count - 1; i >= 0; i--) if (state.ActiveBeams[i].Id == _beamVisualId) { state.ActiveBeams.RemoveAt(i); break; } _beamVisualId = -1; } _pendingSkill = -1; unit.AttackCooldown = 3f; }
         }
         public float GetEngageRange(ref UnitState unit) => 240f;
@@ -541,8 +578,8 @@ namespace MCFight
         {
             if (_chargeTimer > 0) { _chargeTimer -= dt; float t = 1f - _chargeTimer / 2f; unit.X = Mathf.Lerp(_chargeFromX, _chargeToX, t); unit.Y = Mathf.Lerp(_chargeFromY, _chargeToY, t); DamageSystem.ClampToField(ref unit); if (_chargeTimer <= 0) { AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _chargeRadius, state.Units, _chargeDamage, DamageCategory.Melee, null, true); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _chargeRadius, 0.4f)); VFXSpriteView.Play("shockwave", unit.X, unit.Y, 144f, 0.6f); unit.AttackCooldown = 0.5f; } return; }
             if (_castTimer <= 0) return; _castTimer -= dt; _tickTimer += dt;
-            if (_pendingSkill == 1) { if (_ticksDone == 0) { _ticksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; AreaEffectSystem.DealInstantAoe(ref unit, t.X, t.Y, _slashRadius, state.Units, _slashDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 72f, 0.4f); } } else if (_ticksDone == 1 && _tickTimer >= 1.5f) { _ticksDone++; _tickTimer -= 1.5f; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; AreaEffectSystem.DealInstantAoe(ref unit, t.X, t.Y, _slashRadius, state.Units, _slashDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 72f, 0.4f); } } else if (_ticksDone == 2 && _castTimer <= 0) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; AreaEffectSystem.DealInstantAoe(ref unit, t.X, t.Y, _slashRadius, state.Units, _finishDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 72f, 0.5f); } } }
-            if (_pendingSkill == 2 && _castTimer <= 0) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; AreaEffectSystem.DealInstantAoe(ref unit, t.X, t.Y, _bigSlashRadius, state.Units, _bigSlashDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 100f, 0.6f); } }
+            if (_pendingSkill == 1) { if (_ticksDone == 0) { _ticksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float aim = Mathf.Atan2(t.Y - unit.Y, t.X - unit.X); AreaEffectSystem.DealSectorAoe(ref unit, unit.X, unit.Y, aim, 45f * Mathf.Deg2Rad, _slashRadius, state.Units, _slashDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 72f, 0.4f); } } else if (_ticksDone == 1 && _tickTimer >= 1.5f) { _ticksDone++; _tickTimer -= 1.5f; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float aim = Mathf.Atan2(t.Y - unit.Y, t.X - unit.X); AreaEffectSystem.DealSectorAoe(ref unit, unit.X, unit.Y, aim, 45f * Mathf.Deg2Rad, _slashRadius, state.Units, _slashDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 72f, 0.4f); } } else if (_ticksDone == 2 && _castTimer <= 0) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float aim = Mathf.Atan2(t.Y - unit.Y, t.X - unit.X); AreaEffectSystem.DealSectorAoe(ref unit, unit.X, unit.Y, aim, 45f * Mathf.Deg2Rad, _slashRadius, state.Units, _finishDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 72f, 0.5f); } } }
+            if (_pendingSkill == 2 && _castTimer <= 0) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float aim = Mathf.Atan2(t.Y - unit.Y, t.X - unit.X); AreaEffectSystem.DealSectorAoe(ref unit, unit.X, unit.Y, aim, 60f * Mathf.Deg2Rad, _bigSlashRadius, state.Units, _bigSlashDamage, DamageCategory.Melee, null, true); float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); MCFight.SlashView.Play(unit.X, unit.Y, d > 0.01f ? dx / d : 1f, d > 0.01f ? dy / d : 0f, 100f, 0.6f); } }
             if (_castTimer <= 0) { _pendingSkill = -1; unit.AttackCooldown = 0.5f; }
         }
         public float GetEngageRange(ref UnitState unit) => 260f;
@@ -586,7 +623,7 @@ namespace MCFight
             if (_beamTimer <= 0) return;
             _beamTimer -= dt; _beamTickTimer += dt;
             for (int i = 0; i < state.ActiveBeams.Count; i++) { if (state.ActiveBeams[i].Id == _beamVisualId) { int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); var beam = state.ActiveBeams[i]; beam.OriginX = unit.X; beam.OriginY = unit.Y; beam.DirX = d > 0.01f ? dx / d : 1f; beam.DirY = d > 0.01f ? dy / d : 0f; beam.Length = _beamLength; beam.Remaining = _beamTimer; state.ActiveBeams[i] = beam; } break; } }
-            if (_beamTickTimer >= _beamTickInterval && _beamTicksDone < _beamTicks) { _beamTickTimer -= _beamTickInterval; _beamTicksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); float dirX = d > 0.01f ? dx / d : 1f, dirY = d > 0.01f ? dy / d : 0f; for (int i = 0; i < state.Units.Count; i++) { ref var u = ref state.Units[i]; if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue; float px = u.X - unit.X, py = u.Y - unit.Y; float proj = px * dirX + py * dirY; proj = Mathf.Clamp(proj, 0, _beamLength); float closestX = unit.X + dirX * proj, closestY = unit.Y + dirY * proj; float distToBeam = DamageSystem.Dist(u.X, u.Y, closestX, closestY); if (distToBeam <= _beamHalfWidth + u.Radius) DamageSystem.DealDamage(ref u, _beamDamage, DamageCategory.Beam, ref unit, state.Units); } } }
+            if (_beamTickTimer >= _beamTickInterval && _beamTicksDone < _beamTicks) { _beamTickTimer -= _beamTickInterval; _beamTicksDone++; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dx = t.X - unit.X, dy = t.Y - unit.Y; float d = Mathf.Sqrt(dx * dx + dy * dy); float dirX = d > 0.01f ? dx / d : 1f, dirY = d > 0.01f ? dy / d : 0f; AreaEffectSystem.DealBeamAoe(ref unit, unit.X, unit.Y, dirX, dirY, _beamLength, _beamHalfWidth, state.Units, _beamDamage, DamageCategory.Beam, null, false); } }
             if (_beamTimer <= 0) { unit.AttackCooldown = 0.5f; for (int i = state.ActiveBeams.Count - 1; i >= 0; i--) if (state.ActiveBeams[i].Id == _beamVisualId) { state.ActiveBeams.RemoveAt(i); break; } _beamVisualId = -1; }
         }
         public float GetEngageRange(ref UnitState unit) => 280f;
@@ -616,7 +653,7 @@ namespace MCFight
         }
         public void TickCast(ref UnitState unit, BattleState state, float dt)
         {
-            _meteorTimer -= dt; if (_meteorTimer <= 0) { _meteorTimer = _meteorInterval; float angle = (float)(state.RNG.NextDouble() * Mathf.PI * 2); float r = (float)state.RNG.NextDouble() * 200f; float mx = unit.X + Mathf.Cos(angle) * r; float my = unit.Y + Mathf.Sin(angle) * r; AreaEffectSystem.DealInstantAoe(ref unit, mx, my, _meteorRadius, state.Units, _meteorDamage, DamageCategory.Ranged, new[] { StatusEffectType.Burn }, false); state.AreaEffects.Add(AreaEffectSystem.CreateLava(state.NextId(), unit.Team, mx, my, _meteorRadius, _lavaDuration, _lavaDPS)); MCFight.VFXSpriteView.Play("meteor", mx, my, 106f, 1.5f); }
+            _meteorTimer -= dt; if (_meteorTimer <= 0) { _meteorTimer = _meteorInterval; float angle = (float)(state.RNG.NextDouble() * Mathf.PI * 2); float r = (float)state.RNG.NextDouble() * 200f; float mx = unit.X + Mathf.Cos(angle) * r; float my = unit.Y + Mathf.Sin(angle) * r; AreaEffectSystem.DealInstantAoe(ref unit, mx, my, _meteorRadius, state.Units, _meteorDamage, DamageCategory.Ranged, new[] { StatusEffectType.Burn }, false); state.AreaEffects.Add(AreaEffectSystem.CreateLava(state.NextId(), unit.Team, mx, my, _meteorRadius, _lavaDuration, _lavaDPS)); MCFight.VFXSpriteView.Play("meteor", mx, my, 106f, 1.5f); MCFight.VFXSpriteView.Play("lava_circle", mx, my, _meteorRadius * 2f, _lavaDuration); }
             if (_castTimer <= 0) return; _castTimer -= dt;
             if (_pendingSkill == 0) { float t = 1f - _castTimer / 0.84f; float fx = unit.SkillState.GetFloat("lux_leap_from_x".GetHashCode(), unit.X); float fy = unit.SkillState.GetFloat("lux_leap_from_y".GetHashCode(), unit.Y); float tx = unit.SkillState.GetFloat("lux_leap_to_x".GetHashCode(), unit.X); float ty = unit.SkillState.GetFloat("lux_leap_to_y".GetHashCode(), unit.Y); MovementSystem.SetLeapArcPosition(ref unit, fx, fy, tx, ty, t, 55f); if (_castTimer <= 0) { AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _leapRadius, state.Units, _leapDamage, DamageCategory.Melee, new[] { StatusEffectType.Burn }, true); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _leapRadius, 0.42f)); unit.AttackCooldown = 0.5f; } }
             if (_pendingSkill == 1 && _castTimer <= 0) { AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _stompRadius, state.Units, _stompDamage, DamageCategory.Melee, new[] { StatusEffectType.Burn }, true); unit.AttackCooldown = 2.2f; }
@@ -642,24 +679,37 @@ namespace MCFight
             if (_castTimer > 0 || unit.AttackCooldown > 0) return false;
             if (targetIdx < 0) return false;
             ref var target = ref state.Units[targetIdx];
+            float pad = target.Radius * BattleConstants.TARGET_RADIUS_PAD;
+            float meleeDist = Mathf.Max(55f, unit.Radius + target.Radius) + pad;
+            float stompDist = _stompRadius + pad;
+            float sandstormReach = 96f + _tornadoRadius + pad; // orbitRadius + tornadoRadius
+            float obeliskReach = 290f + pad;
+
             var opts = new List<int>();
-            if (target.MoveType == MoveType.Ground) { if (dist <= Mathf.Max(55f, unit.Radius + target.Radius) + target.Radius * BattleConstants.TARGET_RADIUS_PAD) opts.Add(0); opts.Add(1); opts.Add(3); }
-            opts.Add(2); if (_obeliskCd <= 0) opts.Add(4);
+            if (target.MoveType == MoveType.Ground)
+            {
+                if (dist <= meleeDist) opts.Add(0); // 撕咬
+                if (dist <= stompDist) opts.Add(1); // 甩尾(践踏)
+                opts.Add(3); // 践踏(目标位置AOE，射程远)
+            }
+            if (dist <= sandstormReach) opts.Add(2); // 沙暴(仅在龙卷风能接触到的距离)
+            if (_obeliskCd <= 0 && dist <= obeliskReach) opts.Add(4); // 石碑弹幕
+
             if (opts.Count == 0) return false;
-            _pendingSkill = opts[state.RNG.Next(opts.Count)]; _castTimer = 3f; unit.State = UnitStateEnum.Attack;
+            _pendingSkill = opts[state.RNG.Next(opts.Count)]; _castTimer = 2f; unit.State = UnitStateEnum.Attack;
             return true;
         }
         public void TickCast(ref UnitState unit, BattleState state, float dt)
         {
-            if (_castTimer <= 0) return; float elapsed = 3f - _castTimer; _castTimer -= dt;
-            if (_pendingSkill == 0 && elapsed >= 1.5f && !_hasSandstorm) { _hasSandstorm = true; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dmg = _biteDamage + t.MaxHp * _biteDamagePct; DamageSystem.DealDamage(ref t, dmg, DamageCategory.Melee, ref unit, state.Units); } }
-            if (_pendingSkill == 1 && elapsed >= 1.5f && !_hasSandstorm) { _hasSandstorm = true; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _stompRadius, state.Units, _stompDamage, DamageCategory.Melee, null, true); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _stompRadius, 0.45f)); }
-            if (_pendingSkill == 2 && elapsed >= 1.5f && !_hasSandstorm) { _hasSandstorm = true; for (int i = 0; i < _tornadoCount; i++) { var eff = AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _tornadoRadius, 15f); eff.Type = AreaEffectType.SandTornado; eff.OrbitRadius = 96f; eff.OrbitAngle = i * (Mathf.PI * 2f / _tornadoCount); eff.AngularSpeed = 2.2f; eff.Damage = _tornadoDamage; state.AreaEffects.Add(eff); } VFXSpriteView.Play("sandstorm", unit.X, unit.Y, 192f, 15f); }
-            if (_pendingSkill == 3 && elapsed >= 1.5f && !_hasSandstorm) { _hasSandstorm = true; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dmg = 23f + t.MaxHp * 0.035f; AreaEffectSystem.DealInstantAoe(ref unit, t.X, t.Y, 100f, state.Units, dmg, DamageCategory.Melee, null, true); } VFXSpriteView.Play("shockwave", unit.X, unit.Y, 200f, 1f); }
-            if (_pendingSkill == 4 && elapsed >= 1.5f && !_hasSandstorm) { _hasSandstorm = true; _obeliskCd = _obeliskCooldown; var hitIds = new List<int>(); for (int r = 0; r < _obeliskRings; r++) { float radius = r * (200f / (_obeliskRings - 1)); int count = Mathf.Max(1, r + 1); for (int a = 0; a < count; a++) { float angle = (a * Mathf.PI * 2f / count) + r * 0.3f; float ox = unit.X + Mathf.Cos(angle) * radius; float oy = unit.Y + Mathf.Sin(angle) * radius; VFXSpriteView.Play("obelisk", ox, oy, 48f, 1.5f); for (int i = 0; i < state.Units.Count; i++) { ref var u = ref state.Units[i]; if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue; if (hitIds.Contains(u.Id)) continue; float d = DamageSystem.Dist(ox, oy, u.X, u.Y); if (d <= 24f + u.Radius) { float dmg = _obeliskDamage + u.MaxHp * _obeliskDamagePct; DamageSystem.DealDamage(ref u, dmg, DamageCategory.Melee, ref unit, state.Units); hitIds.Add(u.Id); } } } } }
-            if (_castTimer <= 0) { _pendingSkill = -1; _hasSandstorm = false; unit.AttackCooldown = 3f; }
+            if (_castTimer <= 0) return; float elapsed = 2f - _castTimer; _castTimer -= dt;
+            if (_pendingSkill == 0 && elapsed >= 1.0f && !_hasSandstorm) { _hasSandstorm = true; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dmg = _biteDamage + t.MaxHp * _biteDamagePct; DamageSystem.DealDamage(ref t, dmg, DamageCategory.Melee, ref unit, state.Units); } }
+            if (_pendingSkill == 1 && elapsed >= 1.0f && !_hasSandstorm) { _hasSandstorm = true; AreaEffectSystem.DealInstantAoe(ref unit, unit.X, unit.Y, _stompRadius, state.Units, _stompDamage, DamageCategory.Melee, null, true); state.AreaEffects.Add(AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _stompRadius, 0.45f)); VFXSpriteView.Play("shockwave", unit.X, unit.Y, _stompRadius * 2f, 0.6f); }
+            if (_pendingSkill == 2 && elapsed >= 1.0f && !_hasSandstorm) { _hasSandstorm = true; for (int i = 0; i < _tornadoCount; i++) { var eff = AreaEffectSystem.CreateShockwave(state.NextId(), unit.Team, unit.X, unit.Y, _tornadoRadius, 15f); eff.Type = AreaEffectType.SandTornado; eff.OrbitRadius = 96f; eff.OrbitAngle = i * (Mathf.PI * 2f / _tornadoCount); eff.AngularSpeed = 2.2f; eff.Damage = _tornadoDamage; eff.X = unit.X + Mathf.Cos(eff.OrbitAngle) * eff.OrbitRadius; eff.Y = unit.Y + Mathf.Sin(eff.OrbitAngle) * eff.OrbitRadius; state.AreaEffects.Add(eff); } }
+            if (_pendingSkill == 3 && elapsed >= 1.0f && !_hasSandstorm) { _hasSandstorm = true; int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId); if (tIdx >= 0) { ref var t = ref state.Units[tIdx]; float dmg = 23f + t.MaxHp * 0.035f; AreaEffectSystem.DealInstantAoe(ref unit, t.X, t.Y, 100f, state.Units, dmg, DamageCategory.Melee, null, true); } VFXSpriteView.Play("shockwave", unit.X, unit.Y, 200f, 1f); }
+            if (_pendingSkill == 4 && elapsed >= 1.0f && !_hasSandstorm) { _hasSandstorm = true; _obeliskCd = _obeliskCooldown; var hitIds = new List<int>(); for (int r = 0; r < _obeliskRings; r++) { float radius = r * (240f / (_obeliskRings - 1)); int count = Mathf.Max(1, r + 1); for (int a = 0; a < count; a++) { float angle = (a * Mathf.PI * 2f / count) + r * 0.3f; float ox = unit.X + Mathf.Cos(angle) * radius; float oy = unit.Y + Mathf.Sin(angle) * radius; VFXSpriteView.Play("obelisk", ox, oy, 100f, 1.5f); for (int i = 0; i < state.Units.Count; i++) { ref var u = ref state.Units[i]; if (u.Team == unit.Team || u.State == UnitStateEnum.Dead) continue; if (hitIds.Contains(u.Id)) continue; float d = DamageSystem.Dist(ox, oy, u.X, u.Y); if (d <= 50f + u.Radius) { float dmg = _obeliskDamage + u.MaxHp * _obeliskDamagePct; DamageSystem.DealDamage(ref u, dmg, DamageCategory.Melee, ref unit, state.Units); hitIds.Add(u.Id); } } } } }
+            if (_castTimer <= 0) { _pendingSkill = -1; _hasSandstorm = false; }
         }
-        public float GetEngageRange(ref UnitState unit) => 200f;
+        public float GetEngageRange(ref UnitState unit) => 290f;
         public bool IsBusy(ref UnitState unit) => _castTimer > 0;
         public bool AllowAntiAir(ref UnitState unit) => true;
     }
@@ -736,6 +786,110 @@ namespace MCFight
         }
         public float GetEngageRange(ref UnitState unit) => 200f;
         public bool IsBusy(ref UnitState unit) => true;
+        public bool AllowAntiAir(ref UnitState unit) => true;
+    }
+
+    /// <summary> 渊灵术士：标记目标 → 延迟 → 激光雨（7tick×14=98总伤害） </summary>
+    public class WarlockAbility : IAbilityComponent
+    {
+        private float _cd = 0f;
+        private float _castTimer = 0f;
+        private float _tickTimer = 0f;
+        private int _ticksDone = 0;
+        private float _markX, _markY;
+        private int _beamVisualId = -1;
+        private string _mid;
+        private float _markRange, _markDelay, _laserTickDamage, _laserTickInterval, _laserRadius, _abilityCooldown;
+        private int _laserTicks;
+
+        public WarlockAbility(MonsterDefSO def)
+        {
+            _mid = def.monsterId;
+            _markRange = MonsterConfigLoader.GetAbilityParam(_mid, "markRange");
+            _markDelay = MonsterConfigLoader.GetAbilityParam(_mid, "markDelay");
+            _laserTickDamage = MonsterConfigLoader.GetAbilityParam(_mid, "laserTickDamage");
+            _laserTicks = MonsterConfigLoader.GetAbilityParamInt(_mid, "laserTicks");
+            _laserTickInterval = MonsterConfigLoader.GetAbilityParam(_mid, "laserTickInterval");
+            _laserRadius = MonsterConfigLoader.GetAbilityParam(_mid, "laserRadius");
+            _abilityCooldown = MonsterConfigLoader.GetAbilityParam(_mid, "abilityCooldown");
+        }
+
+        public void OnInit(ref UnitState unit) { _cd = 0f; }
+
+        public bool TryExecute(ref UnitState unit, int targetIdx, float dist, BattleState state, float dt)
+        {
+            if (_cd > 0) _cd -= dt;
+            if (_castTimer > 0) return true;
+            if (unit.AttackCooldown > 0) return false;
+            if (targetIdx < 0) return false;
+            ref var target = ref state.Units[targetIdx];
+            if (!TargetingSystem.CanTargetForAttack(ref unit, ref target, true)) return false;
+            if (_cd <= 0 && dist <= _markRange + target.Radius * BattleConstants.TARGET_RADIUS_PAD)
+            {
+                _markX = target.X;
+                _markY = target.Y;
+                _castTimer = _markDelay + _laserTicks * _laserTickInterval;
+                _cd = _abilityCooldown;
+                _ticksDone = 0;
+                _tickTimer = 0f;
+                _beamVisualId = state.NextId();
+                unit.State = UnitStateEnum.Attack;
+                return true;
+            }
+            return false;
+        }
+
+        public void TickCast(ref UnitState unit, BattleState state, float dt)
+        {
+            if (_castTimer <= 0) return;
+            _castTimer -= dt;
+
+            // Update beam visual to track current target position
+            if (_beamVisualId >= 0)
+            {
+                int tIdx = TargetingSystem.GetTargetIndex(state.Units, unit.TargetId);
+                if (tIdx >= 0)
+                {
+                    ref var t = ref state.Units[tIdx];
+                    _markX = t.X;
+                    _markY = t.Y;
+                }
+            }
+
+            // Phase 1: Delay (markDelay) - show crosshair marking on target
+            float elapsed = (_markDelay + _laserTicks * _laserTickInterval) - _castTimer;
+            if (elapsed < _markDelay)
+            {
+                // Play crosshair marker once at start, keep it visible during delay
+                if (elapsed < 0.1f)
+                    VFXSpriteView.Play("crosshair", _markX, _markY, 50f, _markDelay);
+                return;
+            }
+
+            // Phase 2: Fire rain
+            _tickTimer += dt;
+            if (_tickTimer >= _laserTickInterval && _ticksDone < _laserTicks)
+            {
+                _tickTimer -= _laserTickInterval;
+                _ticksDone++;
+
+                // Deal beam damage in radius around marked position
+                AreaEffectSystem.DealInstantAoe(ref unit, _markX, _markY, _laserRadius,
+                    state.Units, _laserTickDamage, DamageCategory.Beam, null, false);
+
+                // Play fire rain VFX at marked position
+                VFXSpriteView.Play("firerain", _markX, _markY, 80f, 0.5f);
+            }
+
+            if (_castTimer <= 0)
+            {
+                _beamVisualId = -1;
+                unit.AttackCooldown = 0.5f;
+            }
+        }
+
+        public float GetEngageRange(ref UnitState unit) => _markRange;
+        public bool IsBusy(ref UnitState unit) => _castTimer > 0;
         public bool AllowAntiAir(ref UnitState unit) => true;
     }
 }

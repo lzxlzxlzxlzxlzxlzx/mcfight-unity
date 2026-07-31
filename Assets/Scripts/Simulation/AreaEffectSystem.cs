@@ -106,6 +106,25 @@ namespace MCFight
                 {
                     // 冲击波在创建时即时结算，这里只负责存活计时
                 }
+                // 沙暴龙卷风（围绕施法者旋转，接触造成伤害）
+                else if (eff.Type == AreaEffectType.SandTornado)
+                {
+                    int srcIdx = FindUnitById(units, eff.SourceId);
+                    if (srcIdx >= 0)
+                    {
+                        ref var src = ref units[srcIdx];
+                        eff.OrbitAngle += eff.AngularSpeed * dt;
+                        eff.X = src.X + Mathf.Cos(eff.OrbitAngle) * eff.OrbitRadius;
+                        eff.Y = src.Y + Mathf.Sin(eff.OrbitAngle) * eff.OrbitRadius;
+                    }
+                    eff.DotTimer += dt;
+                    if (eff.DotTimer >= 0.5f)
+                    {
+                        eff.DotTimer -= 0.5f;
+                        ApplyAreaDamage(ref eff, units);
+                    }
+                    effects[i] = eff;
+                }
             }
         }
 
@@ -132,7 +151,7 @@ namespace MCFight
                 }
 
                 float d = DamageSystem.Dist(eff.X, eff.Y, u.X, u.Y);
-                float hitRange = eff.Radius + u.Radius * 0.5f;
+                float hitRange = eff.Radius + u.Radius;
                 if (d <= hitRange)
                 {
                     DamageSystem.DealDamage(ref u, eff.Damage, eff.DamageCategory, ref source, units);
@@ -160,12 +179,119 @@ namespace MCFight
                 if (groundOnly && u.MoveType == MoveType.Fly) continue;
 
                 float d = DamageSystem.Dist(centerX, centerY, u.X, u.Y);
-                float hitRange = radius + u.Radius * 0.5f;
+                float hitRange = radius + u.Radius;
                 if (d <= hitRange)
                 {
                     DamageSystem.DealDamage(ref u, damage, category, ref attacker, units);
                     if (statusOnHit != null)
                         StatusEffectSystem.ApplyAll(ref u, statusOnHit);
+                }
+            }
+        }
+
+        // ===== 形状检测：扇形 =====
+
+        /// <summary> 圆 vs 扇形相交测试 </summary>
+        public static bool IsUnitInSector(
+            float cx, float cy, float aimAngle, float halfAngleRad, float maxRadius,
+            float unitX, float unitY, float unitRadius)
+        {
+            float dx = unitX - cx, dy = unitY - cy;
+            float dist = Mathf.Sqrt(dx * dx + dy * dy);
+            if (dist <= 0.001f) return true;
+
+            float angularPad = Mathf.Asin(Mathf.Min(1f, unitRadius / dist));
+            float angle = Mathf.Atan2(dy, dx);
+            float diff = angle - aimAngle;
+            while (diff > Mathf.PI) diff -= 2f * Mathf.PI;
+            while (diff < -Mathf.PI) diff += 2f * Mathf.PI;
+            if (Mathf.Abs(diff) > halfAngleRad + angularPad) return false;
+
+            return dist - unitRadius <= maxRadius;
+        }
+
+        /// <summary> 扇形范围伤害 </summary>
+        public static void DealSectorAoe(
+            ref UnitState attacker,
+            float cx, float cy, float aimAngle, float halfAngleRad, float maxRadius,
+            UnitList units, float damage,
+            DamageCategory category = DamageCategory.Melee,
+            StatusEffectType[] statusOnHit = null,
+            bool groundOnly = false)
+        {
+            for (int i = 0; i < units.Count; i++)
+            {
+                ref var u = ref units[i];
+                if (u.State == UnitStateEnum.Dead || u.Team == attacker.Team) continue;
+                if (groundOnly && u.MoveType == MoveType.Fly) continue;
+                if (IsUnitInSector(cx, cy, aimAngle, halfAngleRad, maxRadius, u.X, u.Y, u.Radius))
+                {
+                    DamageSystem.DealDamage(ref u, damage, category, ref attacker, units);
+                    if (statusOnHit != null) StatusEffectSystem.ApplyAll(ref u, statusOnHit);
+                }
+            }
+        }
+
+        // ===== 形状检测：线段（光束） =====
+
+        /// <summary> 点到线段距离（dir 为单位向量） </summary>
+        public static float DistPointToSegment(
+            float px, float py, float ox, float oy, float dirX, float dirY, float length)
+        {
+            float along = (px - ox) * dirX + (py - oy) * dirY;
+            float t = Mathf.Clamp(along, 0f, length);
+            float cx = ox + dirX * t, cy = oy + dirY * t;
+            return Mathf.Sqrt((px - cx) * (px - cx) + (py - cy) * (py - cy));
+        }
+
+        /// <summary> 线段范围伤害 </summary>
+        public static void DealBeamAoe(
+            ref UnitState attacker,
+            float ox, float oy, float dirX, float dirY, float length, float halfWidth,
+            UnitList units, float damage,
+            DamageCategory category = DamageCategory.Beam,
+            StatusEffectType[] statusOnHit = null,
+            bool groundOnly = false)
+        {
+            for (int i = 0; i < units.Count; i++)
+            {
+                ref var u = ref units[i];
+                if (u.State == UnitStateEnum.Dead || u.Team == attacker.Team) continue;
+                if (groundOnly && u.MoveType == MoveType.Fly) continue;
+                float d = DistPointToSegment(u.X, u.Y, ox, oy, dirX, dirY, length);
+                if (d <= halfWidth + u.Radius)
+                {
+                    DamageSystem.DealDamage(ref u, damage, category, ref attacker, units);
+                    if (statusOnHit != null) StatusEffectSystem.ApplyAll(ref u, statusOnHit);
+                }
+            }
+        }
+
+        // ===== 形状检测：复合（圆 + 线段） =====
+
+        /// <summary> 复合形状伤害：圆形区域 + 前方线段（如末影符文十字） </summary>
+        public static void DealCompositeAoe(
+            ref UnitState attacker,
+            float ox, float oy, float dirX, float dirY,
+            float barLength, float barHalfWidth, float circleRadius,
+            UnitList units, float damage,
+            DamageCategory category = DamageCategory.Ranged,
+            StatusEffectType[] statusOnHit = null,
+            bool groundOnly = false)
+        {
+            for (int i = 0; i < units.Count; i++)
+            {
+                ref var u = ref units[i];
+                if (u.State == UnitStateEnum.Dead || u.Team == attacker.Team) continue;
+                if (groundOnly && u.MoveType == MoveType.Fly) continue;
+
+                bool inBar = DistPointToSegment(u.X, u.Y, ox, oy, dirX, dirY, barLength) <= barHalfWidth + u.Radius;
+                bool inCircle = DamageSystem.Dist(u.X, u.Y, ox, oy) <= circleRadius + u.Radius;
+
+                if (inBar || inCircle)
+                {
+                    DamageSystem.DealDamage(ref u, damage, category, ref attacker, units);
+                    if (statusOnHit != null) StatusEffectSystem.ApplyAll(ref u, statusOnHit);
                 }
             }
         }

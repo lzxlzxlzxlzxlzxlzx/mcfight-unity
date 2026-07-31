@@ -1,0 +1,139 @@
+{
+    "units": [
+        {
+            "monster_id": "warden",
+            "display_name": "监守者",
+            "price": 400,
+            "expected_power": 0.0,
+            "actual_power": 0.9418328404426575,
+            "power_delta": 0.9418328404426575,
+            "status": "Overpowered",
+            "confidence": 0.10000000149011612,
+            "sample_count": 2
+        },
+        {
+            "monster_id": "skeleton",
+            "display_name": "骷髅",
+            "price": 8,
+            "expected_power": 0.0,
+            "actual_power": 0.9051660895347595,
+            "power_delta": 0.9051660895347595,
+            "status": "Overpowered",
+            "confidence": 0.10000000149011612,
+            "sample_count": 2
+        },
+        {
+            "monster_id": "creeper",
+            "display_name": "苦力怕",
+            "price": 20,
+            "expected_power": 0.0,
+            "actual_power": 0.6000833511352539,
+            "power_delta": 0.6000833511352539,
+            "status": "Overpowered",
+            "confidence": 0.10000000149011612,
+            "sample_count": 2
+        },
+        {
+            "monster_id": "blaze",
+            "display_name": "烈焰人",
+            "price": 10,
+            "expected_power": 0.0,
+            "actual_power": 0.25,
+            "power_delta": 0.25,
+            "status": "Overpowered",
+            "confidence": 0.20000000298023225,
+            "sample_count": 4
+        },
+        {
+            "monster_id": "僵尸",
+            "display_name": "僵尸",
+            "price": 0,
+            "expected_power": 0.0,
+            "actual_power": 0.0,
+            "power_delta": 0.0,
+            "status": "Balanced",
+            "confidence": 0.10000000149011612,
+            "sample_count": 2
+        },
+        {
+            "monster_id": "alexscaves_tremorzilla",
+            "display_name": "撼地斯拉",
+            "price": 1000,
+            "expected_power": 0.0,
+            "actual_power": 0.9929987192153931,
+            "power_delta": 0.9929987192153931,
+            "status": "Overpowered",
+            "confidence": 0.5,
+            "sample_count": 5
+        },
+        {
+            "monster_id": "alexscaves_luxtructosaurus",
+            "display_name": "暝煌龙",
+            "price": 800,
+            "expected_power": 0.0,
+            "actual_power": 0.25,
+            "power_delta": 0.25,
+            "status": "Overpowered",
+            "confidence": 0.5,
+            "sample_count": 5
+        },
+        {
+            "monster_id": "alexsmobs_centipede_head",
+            "display_name": "洞穴蜈蚣",
+            "price": 30,
+            "expected_power": 0.0,
+            "actual_power": 0.6876111626625061,
+            "power_delta": 0.6876111626625061,
+            "status": "Overpowered",
+            "confidence": 1.0,
+            "sample_count": 15
+        },
+        {
+            "monster_id": "iron_golem",
+            "display_name": "铁傀儡",
+            "price": 100,
+            "expected_power": 0.0,
+            "actual_power": 0.6000000238418579,
+            "power_delta": 0.6000000238418579,
+            "status": "Overpowered",
+            "confidence": 1.0,
+            "sample_count": 15
+        },
+        {
+            "monster_id": "alexsmobs_bison",
+            "display_name": "野牛",
+            "price": 30,
+            "expected_power": 0.0,
+            "actual_power": 0.46791669726371767,
+            "power_delta": 0.46791669726371767,
+            "status": "Overpowered",
+            "confidence": 1.0,
+            "sample_count": 15
+        },
+        {
+            "monster_id": "alexsmobs_tusklin",
+            "display_name": "獠牙兽",
+            "price": 30,
+            "expected_power": 0.0,
+            "actual_power": 0.25,
+            "power_delta": 0.25,
+            "status": "Overpowered",
+            "confidence": 1.0,
+            "sample_count": 15
+        }
+    ],
+    "recentFindings": [
+        "监守者 以 100% 胜率排名第一",
+        "苦力怕 对 僵尸 有明显克制 (100%)",
+        "发现 4 个可能超模的单位",
+        "撼地斯拉 以 100% 胜率排名第一",
+        "撼地斯拉 对 暝煌龙 有明显克制 (100%)",
+        "发现 2 个可能超模的单位",
+        "监守者 以 100% 胜率排名第一",
+        "苦力怕 对 僵尸 有明显克制 (100%)",
+        "发现 4 个可能超模的单位",
+        "洞穴蜈蚣 以 67% 胜率排名第一",
+        "野牛 对 獠牙兽 有明显克制 (100%)",
+        "发现 4 个可能超模的单位"
+    ]
+}

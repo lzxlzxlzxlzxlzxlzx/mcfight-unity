@@ -90,6 +90,9 @@ namespace MCFight
                 case DamageCategory.Explosion:
                     VFXSpriteView.Play("smallexplosion", vfxPos.x, vfxPos.y, 60f, 0.8f);
                     break;
+                case DamageCategory.True:
+                    VFXSpriteView.Play("hitmark", vfxPos.x, vfxPos.y, 28f, 0.4f);
+                    break;
             }
         }
 

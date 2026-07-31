@@ -1,0 +1,126 @@
+{
+    "data": {
+        "session_id": "session_20260730_092700",
+        "plan_title": "P5验证-3场1v1",
+        "start_time": "2026-07-30T09:26:16.3541662+08:00",
+        "end_time": "2026-07-30T09:27:00.0891662+08:00",
+        "total_matches": 3,
+        "completed_matches": 3,
+        "skipped_matches": 0,
+        "summary": "共 3 场战斗，5 个单位参与。\r\n最强单位: 监守者 (胜率 100%, PowerScore 0.94)\r\n最显著克制: 苦力怕 > 僵尸 (胜率 100%)\r\n超模单位: 4 个",
+        "key_findings": [
+            "监守者 以 100% 胜率排名第一",
+            "苦力怕 对 僵尸 有明显克制 (100%)",
+            "发现 4 个可能超模的单位"
+        ],
+        "rankings": [
+            {
+                "monster_id": "warden",
+                "display_name": "监守者",
+                "price": 400,
+                "wins": 1,
+                "losses": 0,
+                "draws": 0,
+                "total": 1,
+                "win_rate": 1.0,
+                "avg_damage_dealt": 60.0,
+                "avg_kills": 1.0,
+                "power_score": 0.9418328404426575,
+                "power_delta": 0.9418328404426575,
+                "balance_status": "Overpowered",
+                "confidence": 0.10000000149011612
+            },
+            {
+                "monster_id": "skeleton",
+                "display_name": "骷髅",
+                "price": 8,
+                "wins": 1,
+                "losses": 0,
+                "draws": 0,
+                "total": 1,
+                "win_rate": 1.0,
+                "avg_damage_dealt": 42.0,
+                "avg_kills": 1.0,
+                "power_score": 0.9051660895347595,
+                "power_delta": 0.9051660895347595,
+                "balance_status": "Overpowered",
+                "confidence": 0.10000000149011612
+            },
+            {
+                "monster_id": "creeper",
+                "display_name": "苦力怕",
+                "price": 20,
+                "wins": 1,
+                "losses": 0,
+                "draws": 0,
+                "total": 1,
+                "win_rate": 1.0,
+                "avg_damage_dealt": 0.0,
+                "avg_kills": 0.0,
+                "power_score": 0.6000833511352539,
+                "power_delta": 0.6000833511352539,
+                "balance_status": "Overpowered",
+                "confidence": 0.10000000149011612
+            },
+            {
+                "monster_id": "blaze",
+                "display_name": "烈焰人",
+                "price": 10,
+                "wins": 0,
+                "losses": 2,
+                "draws": 0,
+                "total": 2,
+                "win_rate": 0.0,
+                "avg_damage_dealt": 130.5,
+                "avg_kills": 13.5,
+                "power_score": 0.25,
+                "power_delta": 0.25,
+                "balance_status": "Overpowered",
+                "confidence": 0.20000000298023225
+            },
+            {
+                "monster_id": "僵尸",
+                "display_name": "僵尸",
+                "price": 0,
+                "wins": 0,
+                "losses": 1,
+                "draws": 0,
+                "total": 1,
+                "win_rate": 0.0,
+                "avg_damage_dealt": 0.0,
+                "avg_kills": 0.0,
+                "power_score": 0.0,
+                "power_delta": 0.0,
+                "balance_status": "Balanced",
+                "confidence": 0.10000000149011612
+            }
+        ],
+        "counters": [
+            {
+                "attacker_id": "creeper",
+                "attacker_name": "苦力怕",
+                "target_id": "僵尸",
+                "target_name": "僵尸",
+                "win_rate": 1.0,
+                "sample_size": 1
+            },
+            {
+                "attacker_id": "skeleton",
+                "attacker_name": "骷髅",
+                "target_id": "blaze",
+                "target_name": "烈焰人",
+                "win_rate": 1.0,
+                "sample_size": 1
+            },
+            {
+                "attacker_id": "warden",
+                "attacker_name": "监守者",
+                "target_id": "blaze",
+                "target_name": "烈焰人",
+                "win_rate": 1.0,
+                "sample_size": 1
+            }
+        ],
+        "suggestions": []
+    }
+}

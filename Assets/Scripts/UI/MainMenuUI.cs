@@ -11,6 +11,7 @@ namespace MCFight
         public Button pvAIButton;
         public Button codexButton;
         public Button quitButton;
+        public Button labButton;
 
         [Header("文本")]
         public Text titleText;
@@ -29,6 +30,7 @@ namespace MCFight
             if (pvAIButton) pvAIButton.onClick.AddListener(OnPvAI);
             if (codexButton) codexButton.onClick.AddListener(OnCodex);
             if (quitButton) quitButton.onClick.AddListener(OnQuit);
+            if (labButton) labButton.onClick.AddListener(OnLab);
             if (fullscreenToggleBtn) fullscreenToggleBtn.onClick.AddListener(OnToggleFullscreen);
             UpdateFullscreenText();
         }
@@ -60,6 +62,18 @@ namespace MCFight
         void OnPvP() { if (_gm != null) _gm.StartPvP(); }
         void OnPvAI() { if (_gm != null) _gm.StartPvAI(); }
         void OnCodex() { if (_gm != null) _gm.EnterCodex(); }
+
+        void OnLab()
+        {
+            var labGo = GameObject.Find("LabSessionController");
+            if (labGo == null) { Debug.LogError("[MainMenu] LabSessionController not found!"); return; }
+            var chatUI = labGo.GetComponent<MCFight.BalanceLab.RequirementChatUI>();
+            var labUI = labGo.GetComponent<MCFight.BalanceLab.LabUI>();
+            // Hide main menu so lab background is visible
+            Hide();
+            if (labUI != null) labUI.ShowUI();
+            if (chatUI != null) chatUI.Show();
+        }
 
         void OnQuit()
         {
