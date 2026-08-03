@@ -13,13 +13,9 @@ namespace MCFight.BalanceLab
         private GameObject _panel;
         private Text _statusText;
         private Text _resultText;
-        private Text _progressText;
         private Image _progressBar;
         private Button _pauseBtn;
-        private Button _skipMatchBtn;
-        private Button _skipCaseBtn;
         private Button _stopBtn;
-        private Button _historyBtn;
         private bool _uiCreated = false;
 
         void Start()
@@ -40,10 +36,19 @@ namespace MCFight.BalanceLab
                 UpdateStatus();
         }
 
-        public void ShowUI()
+        /// <summary>显示实验室背景+对话框（用于需求输入阶段）</summary>
+        public void ShowLabMode()
         {
             if (!_uiCreated) CreateUI();
             if (_bg != null) _bg.SetActive(true);
+            _panel.SetActive(true);
+        }
+
+        /// <summary>显示底部控制条（用于战斗执行阶段）</summary>
+        public void ShowExecutionMode()
+        {
+            if (!_uiCreated) CreateUI();
+            if (_bg != null) _bg.SetActive(false);
             _panel.SetActive(true);
         }
 
@@ -58,92 +63,110 @@ namespace MCFight.BalanceLab
             var canvas = FindObjectOfType<Canvas>();
             if (canvas == null) { Debug.LogError("[LabUI] No Canvas"); return; }
 
-            // Full-screen lab background
+            // Full-screen lab background (hidden during execution)
             _bg = LabTheme.CreateLabBackground(canvas.transform);
-            // Move background to the very bottom (before all other panels)
             _bg.transform.SetSiblingIndex(0);
 
-            // Bottom control panel
-            _panel = LabTheme.CreatePanel("LabPanel", 0.15f, 0f, 0.85f, 0f, canvas.transform, 0.95f);
+            // Bottom control bar
+            _panel = LabTheme.CreatePanel("LabPanel", 0f, 0f, 1f, 0f, canvas.transform, 0.92f);
             var prt = _panel.GetComponent<RectTransform>();
             prt.pivot = new Vector2(0.5f, 0f);
-            prt.sizeDelta = new Vector2(0f, 150f);
+            prt.sizeDelta = new Vector2(0f, 130f);
 
-            // Status text (top)
-            _statusText = LabTheme.CreateText("Status", "准备中...", 0f, 0.65f, 1f, 1f, _panel.transform, 18, Color.white, TextAnchor.MiddleCenter);
+            // === Row 1: Status + Progress percent (top, 24px font) ===
+            _statusText = LabTheme.CreateText("Status", "准备中...",
+                0.02f, 0.60f, 0.65f, 0.95f, _panel.transform,
+                22, Color.white, TextAnchor.MiddleLeft);
 
-            // Progress bar background
+            var pctText = LabTheme.CreateText("Pct", "",
+                0.65f, 0.60f, 0.98f, 0.95f, _panel.transform,
+                22, new Color(0.7f, 0.85f, 1f), TextAnchor.MiddleRight);
+
+            // === Row 2: Progress bar (middle) ===
             var progBg = new GameObject("ProgBg", typeof(RectTransform), typeof(Image));
             progBg.transform.SetParent(_panel.transform, false);
             var pbrt = progBg.GetComponent<RectTransform>();
-            pbrt.anchorMin = new Vector2(0.05f, 0.50f);
-            pbrt.anchorMax = new Vector2(0.95f, 0.62f);
+            pbrt.anchorMin = new Vector2(0.02f, 0.42f);
+            pbrt.anchorMax = new Vector2(0.98f, 0.58f);
+            pbrt.offsetMin = Vector2.zero; pbrt.offsetMax = Vector2.zero;
             var bgImg = progBg.GetComponent<Image>();
-            bgImg.color = new Color(0.15f, 0.15f, 0.2f, 0.9f);
+            bgImg.color = new Color(0.12f, 0.12f, 0.16f, 0.9f);
             var bgSprite = LabTheme.Theme?.PanelSprite;
             if (bgSprite != null) { bgImg.sprite = bgSprite; bgImg.type = Image.Type.Sliced; }
 
-            // Progress bar fill
             var progFill = new GameObject("ProgFill", typeof(RectTransform), typeof(Image));
             progFill.transform.SetParent(progBg.transform, false);
             _progressBar = progFill.GetComponent<Image>();
             var fillSprite = LabTheme.ButtonSprite(UIButtonStyled.Style.Success);
             if (fillSprite != null) { _progressBar.sprite = fillSprite; _progressBar.type = Image.Type.Sliced; }
-            else _progressBar.color = new Color(0.2f, 0.6f, 0.3f, 0.9f);
             _progressBar.fillMethod = Image.FillMethod.Horizontal;
             _progressBar.fillAmount = 0f;
             var pfrt = progFill.GetComponent<RectTransform>();
             pfrt.anchorMin = Vector2.zero; pfrt.anchorMax = Vector2.one;
             pfrt.offsetMin = Vector2.zero; pfrt.offsetMax = Vector2.zero;
 
-            // Progress text
-            _progressText = LabTheme.CreateText("Progress", "0%  |  0:00 / ~0:00", 0f, 0.35f, 1f, 0.50f, _panel.transform, 14, new Color(0.7f, 0.85f, 1f), TextAnchor.MiddleCenter);
+            // === Row 3: Result text ===
+            _resultText = LabTheme.CreateText("Result", "",
+                0.02f, 0.25f, 0.98f, 0.42f, _panel.transform,
+                16, new Color(0.8f, 0.8f, 0.85f), TextAnchor.MiddleLeft);
 
-            // Result text
-            _resultText = LabTheme.CreateText("Result", "", 0f, 0.18f, 1f, 0.35f, _panel.transform, 14, new Color(0.8f, 0.8f, 0.8f), TextAnchor.MiddleCenter);
-
-            // Buttons
-            _pauseBtn = LabTheme.CreateButton("PauseBtn", "暂停", 0.02f, 0f, 0.22f, 0.16f, _panel.transform, UIButtonStyled.Style.Primary);
+            // === Row 4: Buttons ===
+            _pauseBtn = LabTheme.CreateButton("PauseBtn", "⏸ 暂停",
+                0.01f, 0f, 0.20f, 0.23f, _panel.transform, UIButtonStyled.Style.Primary, 18);
             _pauseBtn.onClick.AddListener(() =>
             {
-                if (_controller.Phase == LabPhase.Running) { _controller.Pause(); _pauseBtn.GetComponentInChildren<Text>().text = "继续"; }
-                else if (_controller.Phase == LabPhase.Paused) { _controller.Resume(); _pauseBtn.GetComponentInChildren<Text>().text = "暂停"; }
+                if (_controller.Phase == LabPhase.Running) { _controller.Pause(); _pauseBtn.GetComponentInChildren<Text>().text = "▶ 继续"; }
+                else if (_controller.Phase == LabPhase.Paused) { _controller.Resume(); _pauseBtn.GetComponentInChildren<Text>().text = "⏸ 暂停"; }
             });
 
-            _skipMatchBtn = LabTheme.CreateButton("SkipMatchBtn", "跳过此场", 0.24f, 0f, 0.44f, 0.16f, _panel.transform, UIButtonStyled.Style.Secondary);
-            _skipMatchBtn.onClick.AddListener(() => _controller.SkipCurrentMatch());
+            var skipMatchBtn = LabTheme.CreateButton("SkipMatchBtn", "⏭ 跳过此场",
+                0.21f, 0f, 0.45f, 0.23f, _panel.transform, UIButtonStyled.Style.Secondary, 16);
+            skipMatchBtn.onClick.AddListener(() => _controller.SkipCurrentMatch());
 
-            _skipCaseBtn = LabTheme.CreateButton("SkipCaseBtn", "跳过此用例", 0.46f, 0f, 0.66f, 0.16f, _panel.transform, UIButtonStyled.Style.Secondary);
-            _skipCaseBtn.onClick.AddListener(() => _controller.SkipCurrentCase());
+            var skipCaseBtn = LabTheme.CreateButton("SkipCaseBtn", "⏩ 跳过此用例",
+                0.46f, 0f, 0.70f, 0.23f, _panel.transform, UIButtonStyled.Style.Secondary, 16);
+            skipCaseBtn.onClick.AddListener(() => _controller.SkipCurrentCase());
 
-            _stopBtn = LabTheme.CreateButton("StopBtn", "停止", 0.68f, 0f, 0.88f, 0.16f, _panel.transform, UIButtonStyled.Style.Danger);
+            _stopBtn = LabTheme.CreateButton("StopBtn", "⏹ 停止",
+                0.71f, 0f, 0.90f, 0.23f, _panel.transform, UIButtonStyled.Style.Danger, 18);
             _stopBtn.onClick.AddListener(() => _controller.Stop());
 
-            // History button (top-right corner)
-            _historyBtn = LabTheme.CreateButton("HistoryBtn", "📋历史", 0.90f, 0f, 1f, 0.16f, _panel.transform, UIButtonStyled.Style.Secondary, 13);
-            _historyBtn.onClick.AddListener(() => { var h = GetComponent<HistoryBrowserUI>(); if (h != null) h.Show(); });
+            var historyBtn = LabTheme.CreateButton("HistoryBtn", "📋",
+                0.91f, 0f, 0.99f, 0.23f, _panel.transform, UIButtonStyled.Style.Secondary, 18);
+            historyBtn.onClick.AddListener(() => { var h = GetComponent<HistoryBrowserUI>(); if (h != null) h.Show(); });
+
+            // Store pctText reference via name for Update
+            pctText.name = "PctText";
 
             _uiCreated = true;
+        }
+
+        Text GetPctText()
+        {
+            var t = _panel?.transform.Find("PctText");
+            return t?.GetComponent<Text>();
         }
 
         void UpdateStatus()
         {
             if (_statusText == null) return;
+
             var sb = new StringBuilder();
-            sb.AppendLine($"场次 {CompletedMatches}/{_controller.TotalMatches}  |  {_controller.CurrentLabel}");
-            var phase = _controller.Phase == LabPhase.Paused ? "  [已暂停]" : "";
-            sb.Append(phase);
+            sb.Append($"场次 {_controller.CompletedMatches}/{_controller.TotalMatches}");
+            sb.Append($"  |  {_controller.CurrentLabel}");
+            if (_controller.Phase == LabPhase.Paused) sb.Append("  [已暂停]");
             _statusText.text = sb.ToString();
 
             float pct = _controller.ProgressPercent;
             if (_progressBar != null) _progressBar.fillAmount = pct / 100f;
 
-            if (_progressText != null)
+            var pctTxt = GetPctText();
+            if (pctTxt != null)
             {
                 string elapsed = FormatTime(_controller.ElapsedTime);
                 string remaining = FormatTime(_controller.EstimatedRemainingSeconds);
                 string skipInfo = _controller.SkippedMatches > 0 ? $"  跳过{_controller.SkippedMatches}场" : "";
-                _progressText.text = $"{pct:F0}%  |  {elapsed} / ~{remaining}{skipInfo}";
+                pctTxt.text = $"{pct:F0}%  {elapsed} / ~{remaining}{skipInfo}";
             }
         }
 
@@ -154,22 +177,23 @@ namespace MCFight.BalanceLab
             return $"{m}:{s:00}";
         }
 
-        int CompletedMatches => _controller.CompletedMatches;
-
         void OnMatch(LabMatchResult result)
         {
             string winner = result.Winner == 0 ? "蓝方胜" : result.Winner == 1 ? "红方胜" : "平局";
-            if (_resultText != null) _resultText.text = $"上一场: {winner}  耗时 {result.Duration:F1}s";
+            if (_resultText != null)
+                _resultText.text = $"上一场: {winner}  耗时 {result.Duration:F1}s";
         }
 
         void OnCase(LabTestCaseResult result)
         {
-            if (_resultText != null) _resultText.text = $"{result.Label}: 蓝{result.BlueWins} 红{result.RedWins} 平{result.Draws}";
+            if (_resultText != null)
+                _resultText.text = $"{result.Label}: 蓝{result.BlueWins} 红{result.RedWins} 平{result.Draws}";
         }
 
         void OnCaseSkipped(LabTestCaseResult result)
         {
-            if (_resultText != null) _resultText.text = $"已跳过: {result.Label}";
+            if (_resultText != null)
+                _resultText.text = $"已跳过: {result.Label}";
         }
 
         void OnSession(List<LabTestCaseResult> results)
@@ -192,8 +216,9 @@ namespace MCFight.BalanceLab
 
         void OnPhaseChanged(LabPhase phase)
         {
-            if (phase == LabPhase.Paused) _pauseBtn.GetComponentInChildren<Text>().text = "继续";
-            else if (phase == LabPhase.Running) _pauseBtn.GetComponentInChildren<Text>().text = "暂停";
+            if (_pauseBtn == null) return;
+            if (phase == LabPhase.Paused) _pauseBtn.GetComponentInChildren<Text>().text = "▶ 继续";
+            else if (phase == LabPhase.Running) _pauseBtn.GetComponentInChildren<Text>().text = "⏸ 暂停";
         }
     }
 }

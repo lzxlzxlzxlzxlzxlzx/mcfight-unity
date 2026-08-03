@@ -167,10 +167,7 @@ namespace MCFight.BalanceLab
             if (valid)
             {
                 _pendingPlan = plan;
-                int total = TestPlanIO.CountTotalMatches(plan);
-                AppendLog($"<color=#88FF88>🤖 LLM 计划已生成: {plan.tests.Count} 个测试, 共 {total} 场</color>");
-                if (plan.metadata != null && !string.IsNullOrEmpty(plan.metadata.title))
-                    AppendLog($"<color=#5AAAFF>📋 {plan.metadata.title}</color>");
+                AppendLog(FormatPlanSummary(plan, db, "LLM"));
                 _confirmBtn.gameObject.SetActive(true);
                 _cancelBtn.gameObject.SetActive(true);
             }
@@ -202,7 +199,7 @@ namespace MCFight.BalanceLab
             _pendingPlan = planResult.File;
             if (TestPlanIO.Validate(_pendingPlan, db, out var fallbackErrors, out _))
             {
-                AppendLog($"<color=#88FF88>🤖 本地计划已生成:\n{planResult.Summary}</color>");
+                AppendLog(FormatPlanSummary(_pendingPlan, db, "本地"));
                 _confirmBtn.gameObject.SetActive(true);
                 _cancelBtn.gameObject.SetActive(true);
             }
@@ -220,6 +217,38 @@ namespace MCFight.BalanceLab
             var testCases = TestPlanIO.ToLabTestCases(_pendingPlan);
             AppendLog($"<color=#88FF88>🤖 开始执行 {testCases.Count} 个测试...</color>");
             _controller.StartSession(testCases, _pendingPlan?.metadata?.title);
+        }
+
+        string FormatPlanSummary(BalanceTestPlanFile plan, MonsterDatabase db, string source)
+        {
+            int total = TestPlanIO.CountTotalMatches(plan);
+            var sb = new StringBuilder();
+            sb.AppendLine($"<color=#88FF88>🤖 {source}计划已生成: {plan.tests.Count} 个测试, 共 {total} 场</color>");
+            if (plan.metadata != null && !string.IsNullOrEmpty(plan.metadata.title))
+                sb.AppendLine($"<color=#5AAAFF>📋 {plan.metadata.title}</color>");
+            sb.AppendLine("<color=#AAAAAA>━━ 测试用例 ━━</color>");
+            for (int i = 0; i < plan.tests.Count; i++)
+            {
+                var t = plan.tests[i];
+                string blue = FormatTeam(t.team_blue, db);
+                string red = FormatTeam(t.team_red, db);
+                sb.AppendLine($"  <color=#FFD700>[{i + 1}]</color> {t.label}");
+                sb.AppendLine($"      <color=#5AAAFF>蓝: {blue}</color>  vs  <color=#FF6644>红: {red}</color>  ×{t.repeat_count}");
+            }
+            return sb.ToString();
+        }
+
+        static string FormatTeam(BalanceTestTeam team, MonsterDatabase db)
+        {
+            if (team?.monsters == null || team.monsters.Count == 0) return "空";
+            var parts = new List<string>();
+            foreach (var m in team.monsters)
+            {
+                var def = db.GetById(m.monster_id);
+                string name = def?.displayName ?? m.monster_id;
+                parts.Add(m.count > 1 ? $"{name}×{m.count}" : name);
+            }
+            return string.Join(" + ", parts);
         }
 
         void AppendLog(string msg)

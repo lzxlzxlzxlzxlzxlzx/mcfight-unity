@@ -71,7 +71,7 @@ namespace MCFight
             var labUI = labGo.GetComponent<MCFight.BalanceLab.LabUI>();
             // Hide main menu so lab background is visible
             Hide();
-            if (labUI != null) labUI.ShowUI();
+            if (labUI != null) labUI.ShowLabMode();
             if (chatUI != null) chatUI.Show();
         }
 

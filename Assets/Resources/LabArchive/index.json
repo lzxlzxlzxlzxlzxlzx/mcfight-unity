@@ -1,6 +1,33 @@
 {
     "sessions": [
         {
+            "session_id": "session_20260731_180241",
+            "title": "寒冬狼 vs 迷雾狼 平衡测试",
+            "created_at": "2026-07-31T18:01:30.6281283+08:00",
+            "status": "Completed",
+            "total_matches": 5,
+            "completed_matches": 5,
+            "key_finding": "寒冬狼 以 100% 胜率排名第一"
+        },
+        {
+            "session_id": "session_20260731_175911",
+            "title": "测试计划",
+            "created_at": "2026-07-31T17:40:57.2167270+08:00",
+            "status": "Completed",
+            "total_matches": 50,
+            "completed_matches": 50,
+            "key_finding": "撼地斯拉 以 100% 胜率排名第一"
+        },
+        {
+            "session_id": "session_20260731_171559",
+            "title": "UI测试",
+            "created_at": "2026-07-31T17:15:16.0357491+08:00",
+            "status": "Completed",
+            "total_matches": 3,
+            "completed_matches": 3,
+            "key_finding": "监守者 以 100% 胜率排名第一"
+        },
+        {
             "session_id": "session_20260730_145950",
             "title": "30G近战单位等价格对战测试",
             "created_at": "2026-07-30T14:53:20.2463812+08:00",

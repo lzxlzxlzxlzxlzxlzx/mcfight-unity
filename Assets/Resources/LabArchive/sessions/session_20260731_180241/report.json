@@ -1,0 +1,83 @@
+{
+    "data": {
+        "session_id": "session_20260731_180241",
+        "plan_title": "寒冬狼 vs 迷雾狼 平衡测试",
+        "start_time": "2026-07-31T18:01:30.6281283+08:00",
+        "end_time": "2026-07-31T18:02:41.2151283+08:00",
+        "total_matches": 5,
+        "completed_matches": 5,
+        "skipped_matches": 0,
+        "summary": "共 5 场战斗，2 个单位参与。\r\n最强单位: 寒冬狼 (胜率 100%, PowerScore 0.91)\r\n最显著克制: 寒冬狼 > 迷雾狼 (胜率 100%)\r\n超模单位: 2 个",
+        "key_findings": [
+            "寒冬狼 以 100% 胜率排名第一",
+            "寒冬狼 对 迷雾狼 有明显克制 (100%)",
+            "发现 2 个可能超模的单位"
+        ],
+        "rankings": [
+            {
+                "monster_id": "twilightforest_winter_wolf",
+                "display_name": "寒冬狼",
+                "price": 16,
+                "wins": 5,
+                "losses": 0,
+                "draws": 0,
+                "total": 5,
+                "win_rate": 1.0,
+                "avg_damage_dealt": 96.0,
+                "avg_kills": 6.599999904632568,
+                "power_score": 0.9105832576751709,
+                "power_delta": 0.9105832576751709,
+                "balance_status": "Overpowered",
+                "confidence": 0.5
+            },
+            {
+                "monster_id": "twilightforest_mist_wolf",
+                "display_name": "迷雾狼",
+                "price": 13,
+                "wins": 0,
+                "losses": 5,
+                "draws": 0,
+                "total": 5,
+                "win_rate": 0.0,
+                "avg_damage_dealt": 31.200000762939454,
+                "avg_kills": 0.0,
+                "power_score": 0.15600000321865083,
+                "power_delta": 0.15600000321865083,
+                "balance_status": "Overpowered",
+                "confidence": 0.5
+            }
+        ],
+        "counters": [
+            {
+                "attacker_id": "twilightforest_winter_wolf",
+                "attacker_name": "寒冬狼",
+                "target_id": "twilightforest_mist_wolf",
+                "target_name": "迷雾狼",
+                "win_rate": 1.0,
+                "sample_size": 5
+            }
+        ],
+        "suggestions": [
+            {
+                "monster_id": "twilightforest_winter_wolf",
+                "display_name": "寒冬狼",
+                "field": "price",
+                "current_value": 16.0,
+                "suggested_value": 20.0,
+                "change_percent": 20.0,
+                "reason": "胜率 100%，PowerDelta +0.91，建议涨价 20%",
+                "confidence": 0.5
+            },
+            {
+                "monster_id": "twilightforest_mist_wolf",
+                "display_name": "迷雾狼",
+                "field": "price",
+                "current_value": 13.0,
+                "suggested_value": 16.0,
+                "change_percent": 20.0,
+                "reason": "胜率 0%，PowerDelta +0.16，建议涨价 20%",
+                "confidence": 0.5
+            }
+        ]
+    }
+}

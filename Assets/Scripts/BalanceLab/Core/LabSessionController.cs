@@ -225,6 +225,12 @@ namespace MCFight.BalanceLab
                 gm.HideAllUI();
             }
 
+            // 切换到执行模式：隐藏实验室背景+对话框，显示底部控制条
+            var labUI = GetComponent<LabUI>();
+            if (labUI != null) labUI.ShowExecutionMode();
+            var chatUI = GetComponent<RequirementChatUI>();
+            if (chatUI != null) chatUI.Hide();
+
             bridge.StartBattle(deployments, GameManager.Instance.Database);
             _currentStats.Init(bridge.Simulator.State);
             _battleStarted = true;
@@ -332,6 +338,10 @@ namespace MCFight.BalanceLab
                 gm.Phase = GamePhase.MainMenu;
                 gm.HideAllUI();
                 gm.mainMenuUI?.Show();
+
+                // 隐藏实验室 UI（底部控制条+背景），报告面板会弹出在上面
+                var labUI = GetComponent<LabUI>();
+                if (labUI != null) labUI.HideUI();
             }
         }
 

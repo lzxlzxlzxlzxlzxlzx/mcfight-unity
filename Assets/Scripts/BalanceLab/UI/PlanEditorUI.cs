@@ -273,7 +273,7 @@ namespace MCFight.BalanceLab
             var labCases = _plan.ToLabTestCases();
             var controller = UnityEngine.Object.FindObjectOfType<LabSessionController>();
             var ui = controller?.GetComponent<LabUI>();
-            if (ui != null) ui.ShowUI();
+            if (ui != null) ui.ShowExecutionMode();
             controller.StartSession(labCases);
         }
 
